@@ -58,7 +58,7 @@
     nil
     nixfmt-rfc-style
     openssl
-    traceroute
+    #traceroute
     # broot # Terminal File System navigator
 
   #  # Broken
@@ -96,9 +96,9 @@
   programs.nushell = {
     enable = true;
     shellAliases = {
-       sw = "sudo nixos-rebuild switch --flake /home/cameron/nix-configs";
-       hxc = "sudo hx /home/cameron/nix-configs/hosts/nixos-server/home.nix";
-       hxcv = "sudo hx /home/cameron/nix-configs/hosts/nixos-server/configuration.nix";
+       sw = "sudo nixos-rebuild switch --flake /home/cameron/configurations";
+       hxc = "sudo hx /home/cameron/configurations/hosts/nixos-server/home.nix";
+       hxcv = "sudo hx /home/cameron/configurations/hosts/nixos-server/configuration.nix";
        lg = "lazygit";
      };
   };

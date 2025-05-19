@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     vim
     #nushell
+    #inputs.wezterm.packages."${pkgs.system}".wezterm
   ];
 
   # Allows Determinate Systems to manage nix

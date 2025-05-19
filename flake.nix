@@ -7,11 +7,13 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    #wezterm.url = "github:wezterm/wezterm/main";
   };
 
-  outputs = { self, nix-darwin, nixpkgs, home-manager }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }: {
     
     darwinConfigurations."Camerons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      specialArgs = { inherit inputs; };
       modules = [
         ./hosts/macbook/configuration.nix
         home-manager.darwinModules.home-manager

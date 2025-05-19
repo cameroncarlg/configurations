@@ -58,6 +58,7 @@
     nil
     nixfmt-rfc-style
     openssl
+    neofetch
     #traceroute
     # broot # Terminal File System navigator
 

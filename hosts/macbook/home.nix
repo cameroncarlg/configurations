@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports = [
@@ -98,30 +98,28 @@
   #  '')
   ];
 
-  #programs.nushell = {
-  #  enable = true;
-  #  shellAliases = {
-  #     sw = "sudo nixos-rebuild switch";
-  #     hxc = "sudo hx /etc/nixos/home.nix";
-  #     hxcv = "sudo hx /etc/nixos/configuration.nix";
-  #   };
-  #};
+  programs.nushell = {
+    enable = true;
+    shellAliases = {
+      sw = "sudo darwin-rebuild switch --flake /Users/cameron/configurations";
+      hxc = "sudo hx /Users/cameron/configurations/hosts/macbook/home.nix";
+      hxcv = "sudo hx /Users/cameron/configurations/hosts/macbook/configuration.nix";
+      lg = "lazygit";
+      ll = "ls -la";
+     };
+  };
 
-  #programs.starship = {
-  #  enable = true;
-  #  enableNushellIntegration = true;
-  #  settings = {
-  #    add_newline = true;
-  #    format = lib.concatStrings [
-  #      "[┌───────────────────>](bold green)"
-  #      "$line_break"
-  #      "[│](bold green)💻 $directory$git_branch"
-  #      "$line_break"
-  #      "[└─> ](bold green)"
-  #      "$line_break"
-  #    ];
-  #  };
-  #};
+  programs.starship = {
+    enable = true;
+    enableNushellIntegration = true;
+    settings = {
+      add_newline = true;
+      format = lib.concatStrings [
+        "🍎 $directory$git_branch> "
+        "$line_break"
+      ];
+    };
+  };
 
 
   #programs.broot = {

@@ -63,7 +63,7 @@
     nixfmt-rfc-style
     openssl
     #traceroute
-    fastfetch
+    neofetch
     # broot # Terminal File System navigator
 
   #  # Broken

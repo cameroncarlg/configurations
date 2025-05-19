@@ -3,9 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     vim
-    neofetch
-    fastfetch
-    helix
     #nushell
   ];
 

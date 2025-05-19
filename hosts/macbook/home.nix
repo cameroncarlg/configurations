@@ -41,11 +41,11 @@
     wget # Terminal HTTP client
     wget2 # Terminal HTTP client
     procs # Modern Unix 'ps'
-    #fastfetch # Modern PC info
+    fastfetch # Modern PC info
     neo-cowsay # Terminal ASCII cow
     speedtest-go # Terminal speedtest
     terminal-parrot # Terminal ASCII parrot
-    nyancat # Modern Unix nyancat
+    #nyancat # Modern Unix nyancat
     cpufetch # Terminal CPU info
     lazygit # Terminal git interface
     bat # Modern Unix 'cat'
@@ -271,7 +271,7 @@
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      sw = "sudo darwin-rebuild switch";
+      sw = "sudo darwin-rebuild switch --flake /Users/cameron/configurations";
       wthr = "wthrr -u f,12h,in";
       ff = "fastfetch";
       cat = "bat";
@@ -281,8 +281,8 @@
     };
     functions = {
       # trash = "mv $argv[1] $HOME/.Trash";
-      hxc = "sudo hx /etc/nix-darwin/hosts/macbook/home.nix";
-      hxcv = "sudo hx /etc/nix-darwin/hosts/macbook/configuration.nix";
+      hxc = "sudo hx /Users/cameron/configurations/hosts/macbook/home.nix";
+      hxcv = "sudo hx /Users/cameron/configurations/hosts/macbook/configuration.nix";
       # code = "codium";
       cd = "builtin cd $argv; and ls";
     };

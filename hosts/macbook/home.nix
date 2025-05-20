@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/common
+    ../../modules/darwin
   ];
 
   #Home Manager needs to know where to manage
@@ -106,18 +107,6 @@
       lg = "lazygit";
       ll = "ls -la";
      };
-  };
-
-  programs.starship = {
-    enable = true;
-    enableNushellIntegration = true;
-    settings = {
-      add_newline = true;
-      format = lib.concatStrings [
-        "🍎 $directory$git_branch> "
-        "$line_break"
-      ];
-    };
   };
 
   programs.fish = {

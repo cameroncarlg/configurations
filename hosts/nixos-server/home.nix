@@ -2,6 +2,8 @@
 
 {
   imports = [
+    ../../modules/common
+    ../../modules/linux
   ];
 
   #Home Manager needs to know where to manage
@@ -43,7 +45,6 @@
     terminal-parrot # Terminal ASCII parrot
     nyancat # Modern Unix nyancat
     cpufetch # Terminal CPU info
-    lazygit # Terminal git interface
     bat # Modern Unix 'cat'
     nix-prefetch-git # TBD
     nix-prefetch-github # TBD
@@ -94,17 +95,17 @@
   #  '')
   ];
 
-  programs.nushell = {
-    enable = true;
-    shellAliases = {
-      sw = "sudo nixos-rebuild switch --flake /home/cameron/configurations";
-      hxc = "sudo hx /home/cameron/configurations/hosts/nixos-server/home.nix";
-      hxcv = "sudo hx /home/cameron/configurations/hosts/nixos-server/configuration.nix";
-      lg = "lazygit";
-      ll = "ls -la";
-      ff = "fastfetch";
-     };
-  };
+  #programs.nushell = {
+  #  enable = true;
+  #  shellAliases = {
+  #    sw = "sudo nixos-rebuild switch --flake /home/cameron/configurations";
+  #    hxc = "sudo hx /home/cameron/configurations/hosts/nixos-server/home.nix";
+  #    hxcv = "sudo hx /home/cameron/configurations/hosts/nixos-server/configuration.nix";
+  #    lg = "lazygit";
+  #    ll = "ls -la";
+  #    ff = "fastfetch";
+  #   };
+  #};
 
   programs.starship = {
     enable = true;
@@ -115,158 +116,6 @@
         "💻 $directory$git_branch> "
         "$line_break"
       ];
-    };
-  };
-
-        #"[┌───────────────────>](bold green)"
-        #"$line_break"
-        #"[│](bold green)💻 $directory$git_branch"
-        #"$line_break"
-        #"[└─> ](bold green)"
-        #"$line_break"
-
-  programs.broot = {
-    enable = true;
-    enableFishIntegration = true;
-    settings.modal = true;
-    settings.verbs = [
-      { invocation = "edit"; execution = "$EDITOR {file}"; }
-      { invocation = "create {subpath}"; execution = "$EDITOR {directory}/{subpath}"; }
-      { invocation = "view"; execution = "toggle_preview {file}"; }
-    ];
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv = {
-      enable = true;
-    };
-  };
-
-  #programs.fzf = {
-  #  enable = true;
-  #  enableFishIntegration = true;
-  #};
-
-  programs.ripgrep = {
-    enable = true;
-    arguments = [
-      "--colors=line:style:bold"
-      "--max-columns-preview"
-      "--smart-case"
-    ];
-  };
-
-  programs.git = {
-    enable = true;
-    userName = "cameroncarlg";
-    userEmail = "cameroncarlg@gmail.com";
-  };
-
-  programs.lazygit = {
-    enable = true;
-    settings = {
-      gui.theme = {
-        lightTheme = true;
-        activeBorderColor = [ "blue" "bold" ];
-      };
-    };
-  };
-
-  programs.helix = {
-    enable = true;
-    defaultEditor = true;
-    languages = {
-      # the language-server option currently requires helix from the master branch at https://github.com/helix-editor/helix/
-      # language-server.typescript-language-server = with pkgs.nodePackages; {
-      #   command = "${typescript-language-server}/bin/typescript-language-server";
-      #   args = [ "--stdio" "--tsserver-path=${typescript}/lib/node_modules/typescript/lib"];
-      # };
-      nix = {
-        language-server = {
-          command = "${pkgs.nil}/bin/nil";
-          args = [ "--stdio" ];
-        };
-        formatter = {
-          command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
-          args = [ "--stdio "];
-        };
-      };
-      language = [
-        {
-          name = "html";
-          formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
-            args = [ "--stdin-filepath" "{}" "--parser" "html" ];
-          };
-        }
-        {
-          name = "css";
-          formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
-            args = [ "--stdin-filepath" "{}" "--parser" "css" ];
-          };
-        }
-        {
-          name = "javascript";
-          formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
-            args = [ "--stdin-filepath" "{}" ];
-          };
-        }
-        {
-          name = "typescript";
-          formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
-            args = [ "--stdin-filepath" "{}" ];
-          };
-        }
-        {
-          name = "jsx";
-          formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
-            args = [ "--stdin-filepath" "{}" "--parser" "jsx" ];
-          };
-        }
-        {
-          name = "tsx";
-          auto-format = true;
-          # formatter = {
-          #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
-          #   args = [ "--stdin-filepath" "{}" "--parser" "tsx" ];
-          # };
-        }
-        {
-          name = "json";
-          auto-format = true;
-          # formatter = {
-          #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
-          #   args = [ "--stdin-filepath" "{}" "--parser" "json" ];
-          # };
-        }
-      ];
-    };
-    settings = {
-      theme = "catppuccin_mocha";
-      editor = {
-        line-number = "relative";
-        lsp.display-messages = true;
-        auto-format = true;
-      };
-      keys.normal = {
-        esc = [ "collapse_selection" "keep_primary_selection" ];
-      };
-      keys.normal.";" = {
-        b = ":sh helix-wezterm.sh blame";
-        c = ":sh helix-wezterm.sh check";
-        e = ":sh helix-wezterm.sh explorer";
-        f = ":sh helix-wezterm.sh fzf";
-        g = ":sh helix-wezterm.sh lazygit";
-        o = ":sh helix-wezterm.sh open";
-        r = ":sh helix-wezterm.sh run";
-        s = ":sh helix-wezterm.sh test_single";
-        t = ":sh helix-wezterm.sh test_all";
-      };
     };
   };
 

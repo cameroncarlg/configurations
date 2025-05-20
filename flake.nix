@@ -16,6 +16,7 @@
       specialArgs = { inherit inputs; };
       modules = [
         ./hosts/macbook/configuration.nix
+        ./modules/common
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;

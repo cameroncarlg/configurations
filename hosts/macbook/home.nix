@@ -145,14 +145,14 @@
   #  enableFishIntegration = true;
   #};
 
-  programs.ripgrep = {
-    enable = true;
-    arguments = [
-      "--colors=line:style:bold"
-      "--max-columns-preview"
-      "--smart-case"
-    ];
-  };
+  #programs.ripgrep = {
+  #  enable = true;
+  #  arguments = [
+  #    "--colors=line:style:bold"
+  #    "--max-columns-preview"
+  #    "--smart-case"
+  #  ];
+  #};
 
   programs.lazygit = {
     enable = true;

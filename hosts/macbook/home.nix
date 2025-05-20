@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
@@ -63,77 +63,50 @@
     nil
     nixfmt-rfc-style
     openssl
-    #traceroute
-    #neofetch
 
-  #  # Broken
+    # Broken
 
-  #  # lazydocker # Terminal docker interface (depreciated I think)
-  #  # dotacat # Modern Unix lolcat
-  #  # m-cli # TBD
+    # lazydocker # Terminal docker interface (depreciated I think)
+    # dotacat # Modern Unix lolcat
 
-  #  # Unsupported on MacOS
+    # Unsupported on MacOS
 
-  #  # vlc # VLC Media Player
-  #  # asciicam # Terminal webcam
-  #  # asciinema-agg # Convert asciinema to .gif
-  #  # asciinema # Terminal recorder
-  #  # bandwhich # Modern Unix 'iftop'
-  #    
-  #  # # It is sometimes useful to fine-tune packages, for example, by applying
-  #  # # overrides. You can do that directly here, just don't forget the
-  #  # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-  #  # # fonts?
-  #  # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    # vlc # VLC Media Player
+    # asciicam # Terminal webcam
+    # asciinema-agg # Convert asciinema to .gif
+    # asciinema # Terminal recorder
+    # bandwhich # Modern Unix 'iftop'
+      
+    # # It is sometimes useful to fine-tune packages, for example, by applying
+    # # overrides. You can do that directly here, just don't forget the
+    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+    # # fonts?
+    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-  #  # # You can also create simple shell scripts directly inside your
-  #  # # configuration. For example, this adds a command 'my-hello' to your
-  #  # # environment:
-  #  (pkgs.writeShellScriptBin "my-hello" ''
-  #    echo "Hello, ${config.home.username}!"
-  #  '')
+    # # You can also create simple shell scripts directly inside your
+    # # configuration. For example, this adds a command 'my-hello' to your
+    # # environment:
+    (pkgs.writeShellScriptBin "my-hello" ''
+      echo "Hello, ${config.home.username}!"
+    '')
 
-  #  (pkgs.writeShellScriptBin "fetchsha" ''
-  #    nix-prefetch-github-latest-release --meta -v $1 $2
-  #  '')
+    (pkgs.writeShellScriptBin "fetchsha" ''
+      nix-prefetch-github-latest-release --meta -v $1 $2
+    '')
   ];
 
-  programs.wezterm = {
-    enable = true;
-    extraConfig = ''
-      local wezterm = require 'wezterm'
-      local config = wezterm.config_builder()
+  # Here is where we would declare config files for user level packages
+  # These are stored in modules/
+  # Example...
 
-      config.color_scheme = 'Catppuccin Mocha'
-      config.use_fancy_tab_bar = false
-      config.show_new_tab_button_in_tab_bar = false
-      config.window_background_opacity = 0.925
-      config.mouse_wheel_scrolls_tabs = true
-      config.font = wezterm.font("Fira Code")
-      config.enable_scroll_bar = true
-      config.hide_mouse_cursor_when_typing = false
-
-      config.keys = {
-        { key = 'Enter', mods = 'CMD', action = wezterm.action.SplitHorizontal {domain = 'CurrentPaneDomain' }},
-        { key = 'Enter', mods = 'CMD|SHIFT', action = wezterm.action.SplitVertical {domain = 'CurrentPaneDomain' }},
-        { key = 't', mods = 'CMD|SHIFT', action = wezterm.action.ActivateTabRelative(-1) },
-        { key = 'w', mods = 'CMD', action = wezterm.action.CloseCurrentPane {confirm = true }},
-        { key = 'w', mods = 'CMD|SHIFT', action = wezterm.action.CloseCurrentTab {confirm = true }},
-        { key = 'j', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Next' },
-        { key = 'k', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Prev' },
-        { key = 'h', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Left' },
-        { key = 'l', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Right' },
-        { key = 'h', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Left', 5 }},
-        { key = 'j', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Down', 5 }},
-        { key = 'k', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Up', 5 }},
-        { key = 'l', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Right', 5 }},
-        { key = 'n', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
-        { key = 'p', mods = 'CMD|SHIFT', action = wezterm.action.ToggleFullScreen },
-      }
-      return config
-    '';
-
-  };
+  # programs.ripgrep = {
+  #   enable = true;
+  #   arguments = [
+  #     "--colors=line:style:bold"
+  #     "--max-columns-preview"
+  #     "--smart-case"
+  #   ];
+  # };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

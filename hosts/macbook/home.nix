@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../../modules/common
   ];
 
   #Home Manager needs to know where to manage

@@ -48,7 +48,6 @@
     terminal-parrot # Terminal ASCII parrot
     #nyancat # Modern Unix nyancat
     cpufetch # Terminal CPU info
-    lazygit # Terminal git interface
     bat # Modern Unix 'cat'
     nix-prefetch-git # TBD
     nix-prefetch-github # TBD
@@ -65,7 +64,6 @@
     openssl
     #traceroute
     #neofetch
-    # broot # Terminal File System navigator
 
   #  # Broken
 
@@ -119,49 +117,6 @@
         "🍎 $directory$git_branch> "
         "$line_break"
       ];
-    };
-  };
-
-
-  #programs.broot = {
-  #  enable = true;
-  #  enableFishIntegration = true;
-  #  settings.modal = true;
-  #  settings.verbs = [
-  #    { invocation = "edit"; execution = "$EDITOR {file}"; }
-  #    { invocation = "create {subpath}"; execution = "$EDITOR {directory}/{subpath}"; }
-  #    { invocation = "view"; execution = "toggle_preview {file}"; }
-  #  ];
-  #};
-
-  #programs.direnv = {
-  #  enable = true;
-  #  nix-direnv = {
-  #    enable = true;
-  #  };
-  #};
-
-  #programs.fzf = {
-  #  enable = true;
-  #  enableFishIntegration = true;
-  #};
-
-  #programs.ripgrep = {
-  #  enable = true;
-  #  arguments = [
-  #    "--colors=line:style:bold"
-  #    "--max-columns-preview"
-  #    "--smart-case"
-  #  ];
-  #};
-
-  programs.lazygit = {
-    enable = true;
-    settings = {
-      gui.theme = {
-        lightTheme = true;
-        activeBorderColor = [ "blue" "bold" ];
-      };
     };
   };
 

@@ -4,5 +4,6 @@
     ./direnv.nix
     ./ripgrep.nix
     ./lazygit.nix
+    ./git.nix
   ];
 }

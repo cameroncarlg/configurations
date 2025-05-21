@@ -63,6 +63,7 @@
     nil
     nixfmt-rfc-style
     openssl
+    glow
 
     # Broken
 

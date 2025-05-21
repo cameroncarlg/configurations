@@ -8,6 +8,11 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     #wezterm.url = "github:wezterm/wezterm/main";
+    #nushell.url = "github:nushell/nushell/0.103.0";
+    #nushell = {
+    #  url = "github:nushell/nushell";
+    #  ref = "c98642647878b4f66fb7e38388a3973071b0e27b";
+    #};
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }: {

@@ -1,6 +1,7 @@
 {
   programs.nushell = {
     enable = true;
+    #packages = inputs.nushell.packages.${pkgs.system}.default;
     shellAliases = {
       sw = "sudo darwin-rebuild switch --flake /Users/cameron/configurations";
       hxc = "sudo hx /Users/cameron/configurations/hosts/macbook/home.nix";

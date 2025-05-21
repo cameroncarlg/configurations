@@ -7,7 +7,7 @@
     settings = {
       add_newline = true;
       format = lib.concatStrings [
-        "💻 $directory$git_branch> "
+        "💾 $directory$git_branch> "
         "$line_break"
       ];
     };

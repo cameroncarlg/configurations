@@ -64,6 +64,7 @@
     nixfmt-rfc-style
     openssl
     glow
+    markdown-oxide
 
     # Broken
 

@@ -91,14 +91,82 @@
     enable = true;
   };
 
-  services.emacs = {
+  services.flaresolverr = {
     enable = true;
+    openFirewall = true;
   };
 
-  #services.flaresolverr = {
-  #  enable = true;
-  #  openFirewall = true;
-  #};
+  services.homepage-dashboard = {
+    enable = true;
+    openFirewall = true;
+    allowedHosts = "192.168.0.18:8082";
+    widgets = [
+      {
+        resources = {
+          cpu = true;
+          disk = "/";
+          memory = true;
+        };
+      }
+      {
+        search = {
+          provider = "duckduckgo";
+          target = "_blank";
+        };
+      }
+  ];
+    services = [
+      {
+        "Media" = [
+          {
+            "Jellyfinn" = {
+              description = "Media Player";
+              href = "http://localhost:8096";
+            };
+          }
+          {
+            "Jellyseer" = {
+              description = "Media Request and Discovery Manager";
+              href = "http://localhost:5055";
+            };
+          }
+          {
+            "Sonarr" = {
+              description = "Smart PVR (Personal Video Recorder) for biT users";
+              href = "http://localhost:8989";
+            };
+          }
+          {
+            "Prowlarr" = {
+              description = "Index Manager/Proxy built to integrate with PVR apps";
+              href = "http://localhost:9696";
+            };
+          }
+        ];
+      }
+      {
+        "Lifestyle" = [
+          {
+            "Mealie" = {
+              description = "Recipe Manager and Meal Planner";
+              href = "http://localhost:9000";
+            };
+          }
+        ];
+      }
+    ];
+  };
+
+  services.audiobookshelf = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  services.pinchflat = {
+    enable = true;
+    openFirewall = true;
+    selfhosted = true;
+  };
 
   #services.dnsmasq = {
   #  enable = true;
@@ -167,6 +235,9 @@
   #  };
   #};
 
+  #services.emacs = {
+  #  enable = true;
+  #};
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -182,7 +253,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -258,6 +329,12 @@
     privoxy
     #emacs
     nushell
+    claude-code
+    #nodejs_22
+    homepage-dashboard
+    #logseq
+    #nextcloud31
+    #nextcloud-client
     #rocmPackages.rocm
   ];
 
@@ -275,8 +352,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 ];
-  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 ];
+  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 8000 ];
+  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 8000 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

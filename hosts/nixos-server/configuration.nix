@@ -9,7 +9,10 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      #inputs.nix-minecraft.nixosModules.mincraft-servers
     ];
+
+  #nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
   # Garbage Collection
   nix.settings.auto-optimise-store = true;
@@ -29,12 +32,26 @@
   networking.networkmanager.enable = true;
 
   # /etc/hosts
-  networking.extraHosts = "192.168.0.18 local";
-  
-  #networking.extraHosts = 
-  #''
-  #  192jellyfin18 nixos.local
-  #http://192.168.0.18;
+  networking.extraHosts = ''
+    127.0.0.1 mealie.local
+    127.0.0.1 dashboard.local
+    127.0.0.1 jellyfin.local
+    127.0.0.1 jellyseer.local
+    127.0.0.1 sonarr.local
+    127.0.0.1 prowlarr.local
+    127.0.0.1 audiobookshelf.local
+    127.0.0.1 paperless.local
+    127.0.0.1 home-assistant.local
+    127.0.0.1 pinchflat.local
+    127.0.0.1 navidrome.local
+    127.0.0.1 immich.local
+    127.0.0.1 resourcepack.local
+    127.0.0.1 open-webui.local
+    127.0.0.1 qbit.local
+    127.0.0.1 n8n.local
+    127.0.0.1 uptime-kuma.local
+    192.168.0.18 mealie.local
+  '';
   
   time.timeZone = "America/Los_Angeles";
 
@@ -56,8 +73,7 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # Homelab Services
-  #services.mealie-nightly-enable = true;
+  # HOMELAB
   services.mealie = {
     enable = true;
     settings = {
@@ -96,67 +112,6 @@
     openFirewall = true;
   };
 
-  services.homepage-dashboard = {
-    enable = true;
-    openFirewall = true;
-    allowedHosts = "192.168.0.18:8082";
-    widgets = [
-      {
-        resources = {
-          cpu = true;
-          disk = "/";
-          memory = true;
-        };
-      }
-      {
-        search = {
-          provider = "duckduckgo";
-          target = "_blank";
-        };
-      }
-  ];
-    services = [
-      {
-        "Media" = [
-          {
-            "Jellyfinn" = {
-              description = "Media Player";
-              href = "http://localhost:8096";
-            };
-          }
-          {
-            "Jellyseer" = {
-              description = "Media Request and Discovery Manager";
-              href = "http://localhost:5055";
-            };
-          }
-          {
-            "Sonarr" = {
-              description = "Smart PVR (Personal Video Recorder) for biT users";
-              href = "http://localhost:8989";
-            };
-          }
-          {
-            "Prowlarr" = {
-              description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "http://localhost:9696";
-            };
-          }
-        ];
-      }
-      {
-        "Lifestyle" = [
-          {
-            "Mealie" = {
-              description = "Recipe Manager and Meal Planner";
-              href = "http://localhost:9000";
-            };
-          }
-        ];
-      }
-    ];
-  };
-
   services.audiobookshelf = {
     enable = true;
     openFirewall = true;
@@ -167,6 +122,94 @@
     openFirewall = true;
     selfhosted = true;
   };
+
+  services.vaultwarden = {
+    enable = true;
+  };
+
+  services.immich = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  environment.etc."paperless-admin-pass".text = "admin";
+  services.paperless = {
+    enable = true;
+    passwordFile = "/etc/paperless-admin-pass";
+  };
+
+  ##services.firefly-iii = {
+  ##  enable = true;
+  #};
+
+  #services.home-assistant = {
+  #  enable = true;
+  #  extraComponents = [
+  #    # Components required to complete the onboarding
+  #    "analytics"
+  #    "google_translate"
+  #    "met"
+  #    "radio_browser"
+  #    "shopping_list"
+  #    "isal"
+  #    "ibeacon"
+  #    "govee_ble"
+  #    "spotify"
+  #    "kegtron"
+  #    "snooz"
+  #    "dlna_dmr"
+  #  ];
+  #  config = {
+  #    # Includes dependencies for a basic setup
+  #    # https://www.home-assistant.io/integrations/default_config/
+  #    default_config = {};
+  #  };
+  #};
+
+  #services.minecraft-servers = {
+  #  enable = true;
+  #  eula = true;
+  #  servers = {
+  #    cool-server1 = {
+  #      enable = true;
+  #    };
+  #  };
+  #};
+
+  services.minecraft-server = {
+    enable = true;
+    eula = true;
+    openFirewall = true; # Opens the port the server is running on (by default 25565 but in this case 43000)
+    declarative = true;
+    #whitelist = {
+    #  # This is a mapping from Minecraft usernames to UUIDs. You can use https://mcuuid.net/ to get a Minecraft UUID for a username
+    #  #username1  = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2"; #czzzAR
+    #  # username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
+    #};
+    serverProperties = {
+      level-name = "test";
+      player-idle-timeout = 5;
+      allow-flight = false;
+      server-port = 43000;
+      difficulty = 3;
+      gamemode = 0;
+      pvp = true;
+      max-players = 5;
+      motd = "Mother Fucking Minecraft Self Hosted Server";
+      # white-list = true;
+      allow-cheats = false;
+      #resource-pack = "http://resourcepack.local/dramatic_skys.zip";
+      #resource-pack-id = "b7bed5d1-d396-47ba-9974-c90784a4e123";
+      #resource-pack-sha1 = "7dc1a5857421a201ad27c356946927ec921ed896";
+      #resource-pack-prompt = "test!";
+    };
+    # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
+  };
+
+  #services.factorio = {
+  #  enable = true;
+  #  openFirewall = true;
+  #};
 
   #services.dnsmasq = {
   #  enable = true;
@@ -213,27 +256,264 @@
 
   #systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
-  #services.ollama = {
-  #  enable = true;
-  #  port = 11434;
-  #  acceleration = "rocm";
-  #  openFirewall = true;
+  services.ollama = {
+    enable = true;
+    port = 11434;
+    #acceleration = "rocm";
+    openFirewall = true;
+  };
+
+  ###services.nextjs-ollama-llm-ui = {
+  ###  enable = true;
+  ###};
+
+  ###services.navidrome= {
+  ###  enable = true;
+  ###  openFirewall = true;
   #};
 
-  #services.nextjs-ollama-llm-ui = {
-  #  enable = true;
-  #};
+  services.caddy = {
+    enable = true;
+    virtualHosts = {
+      "mealie.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:9000
+        '';
+      };
+      "dashboard.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8082
+        '';
+      };
+      "jellyfin.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8096
+        '';
+      };
+      "jellyseer.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:5055
+        '';
+      };
+      "sonarr.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8989
+        '';
+      };
+      "prowlarr.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:9696
+        '';
+      };
+      "audiobookshelf.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8000
+        '';
+      };
+      "paperless.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:28981
+        '';
+      };
+      "home-assistant.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8123
+        '';
+      };
+      "pinchflat.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8945
+        '';
+      };
+      "immich.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:2283
+        '';
+      };
+      "open-webui.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8083
+        '';
+      };
+      "qbit.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8080
+        '';
+      };
+      "n8n.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:5678
+        '';
+      };
+      "uptime-kuma.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:4000
+        '';
+      };
+      #"resourcepack.local:80" = {
+      #  extraConfig = ''
+      #    root * /var/www/minecraft-resource-packs
+      #    file_server
+      # '';
+      #};
+    };
+  };
 
-  #services.caddy = {
-  #  enable = true;
-  #  virtualHosts = {
-  #    "mealie" = {
-  #      extraConfig = ''
-  #        reverse_proxy localhost:9000
-  #      '';
-  #    };
-  #  };
-  #};
+  services.homepage-dashboard = {
+    enable = true;
+    openFirewall = true;
+    allowedHosts = "dashboard.local";
+    widgets = [
+      {
+        resources = {
+          cpu = true;
+          disk = "/";
+          memory = true;
+        };
+      }
+      {
+        search = {
+          provider = "duckduckgo";
+          target = "_blank";
+        };
+      }
+      {
+        widget = {
+          type = "audiobookshelf";
+          url = "https://audiobookshelf.local";
+          key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmZDY2MTEyZi05YWZhLTQ5MGYtODczMC1lODU0YTMxNTRlNjUiLCJ1c2VybmFtZSI6InJvb3QiLCJpYXQiOjE3NTEyNTUxMjJ9.pDUDkMuxRdpjPV9H4HM0cBLfpJyp1p1Z7yM6d8MpuVg";
+        };
+      }
+  ];
+    services = [
+      {
+        "Media" = [
+          {
+            "Jellyfinn" = {
+              description = "Free Software Media System - Server Backend & API";
+              href = "https://jellyfin.local";
+            };
+          }
+          {
+            "Jellyseer" = {
+              description = "Open-source media request and discovery manager for Jellyfin";
+              href = "https://jellyseer.local";
+            };
+          }
+          {
+            "Sonarr" = {
+              description = "Smart PVR (Personal Video Recorder) for bit users";
+              href = "https://sonarr.local";
+            };
+          }
+          {
+            "Prowlarr" = {
+              description = "Index Manager/Proxy built to integrate with PVR apps";
+              href = "https://prowlarr.local";
+            };
+          }
+          {
+            "Pinchflat" = {
+              description = "Your next YouTube media manager";
+              href = "https://pinchflat.local";
+            };
+          }
+          {
+            "AudioBookShelf" = {
+              description = "Self-hosted audiobook and podcast server";
+              href = "https://audiobookshelf.local";
+            };
+          }
+          {
+            "Immich" = {
+              description = "High performance self-hosted photo and video management solution";
+              href = "https://immich.local";
+            };
+          }
+        ];
+      }
+      {
+        "Automation" = [
+          #{
+          #  "Home Assistant" = {
+          #    description = "Open source home automation that puts local control and privacy first";
+          #    href = "https://home-assistant.local";
+          #  };
+          #}
+          {
+            "Mealie" = {
+              description = "Self hosted recipe manager and meal planner";
+              href = "https://mealie.local";
+            };
+          }
+          {
+            "Paperless-ngx" = {
+              description = "Community-supported supercharged document management system: scan, index and archive all your documents";
+              href = "http://localhost:28981";
+            };
+          }
+          {
+            "Vaultwarden" = {
+              description = "Unofficial Bitwarden compatible server written in Rust";
+              href = "http://localhost:8222";
+            };
+          }
+          {
+            "Open-webui" = {
+              description = "Chat UI for Self Hosted LLMs";
+              href = "https://open-webui.local";
+            };
+          }
+          {
+            "Uptime-kuma" = {
+              description = "A fancy self-hosted monitoring tool";
+              href = "https://uptime-kuma.local";
+            };
+          }
+          {
+            "n8n" = {
+              description = "Automation GUI for Self Hosted LLMs";
+              href = "https://n8n.local";
+            };
+          }
+        ];
+      }
+      {
+        "Most Visited" = [
+          #{
+          #  "Home Assistant" = {
+          #    description = "Open source home automation that puts local control and privacy first";
+          #    href = "https://home-assistant.local";
+          #  };
+          #}
+          {
+            "Github" = {
+              description = "Link to personal github repo";
+              href = "https://github.com/cameroncarlg";
+            };
+          }
+        ];
+      }
+    ];
+  };
+
+  services.open-webui = {
+    enable = true;
+    openFirewall = true;
+    port = 8083;
+  };
+
+  services.n8n = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  services.uptime-kuma = {
+    enable = true;
+    settings = {
+      PORT = "4000";
+    };
+  };
 
   #services.emacs = {
   #  enable = true;
@@ -305,33 +585,46 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    vim
+    wget
     git
     neovim
     brave
     gnome-tweaks
+    mullvad
+    mullvad-vpn
+    nginx
+    qbittorrent-enhanced
+    python3
+    aichat
+    remmina
+    gitlab
+    nushell
+    claude-code
+    ollama
+    privoxy
+    #minecraft
+    minecraft-server
+    #factorio
+
+    # Homelab 
+    mealie
     jellyfin
     jellyseerr
     sonarr
     prowlarr
-    mullvad
-    mullvad-vpn
-    qbittorrent-enhanced
-    mealie
-    python3
-    gitlab
-    nginx
-    ollama
-    aichat
-    remmina
-    #caddy
-    privoxy
-    #emacs
-    nushell
-    claude-code
-    #nodejs_22
+    paperless-ngx
+    #home-assistant
     homepage-dashboard
+    vaultwarden
+    caddy
+    immich
+    open-webui
+    n8n
+    uptime-kuma
+    #firefly-iii
+    #navidrome
+    #fosrl-pangolin
     #logseq
     #nextcloud31
     #nextcloud-client
@@ -352,8 +645,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 8000 ];
-  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 8000 ];
+  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 ];
+  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

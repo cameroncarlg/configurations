@@ -7,6 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    #nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     #wezterm.url = "github:wezterm/wezterm/main";
     #nushell.url = "github:nushell/nushell/0.103.0";
     #nushell = {

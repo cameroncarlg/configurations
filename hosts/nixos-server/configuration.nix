@@ -50,6 +50,8 @@
     127.0.0.1 qbit.local
     127.0.0.1 n8n.local
     127.0.0.1 uptime-kuma.local
+    127.0.0.1 vikunja.local
+    127.0.0.1 syncthing.local
     192.168.0.18 mealie.local
   '';
   
@@ -140,6 +142,9 @@
 
   ##services.firefly-iii = {
   ##  enable = true;
+  ##  settings = {
+  ##    APP_KEY_FILE = "/home/cameron/app-key.txt";
+  ##  };
   #};
 
   #services.home-assistant = {
@@ -204,6 +209,11 @@
       #resource-pack-prompt = "test!";
     };
     # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
+  };
+
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true;
   };
 
   #services.factorio = {
@@ -275,79 +285,89 @@
   services.caddy = {
     enable = true;
     virtualHosts = {
-      "mealie.local" = {
+      "http://mealie.local" = {
         extraConfig = ''
           reverse_proxy localhost:9000
         '';
       };
-      "dashboard.local" = {
+      "http://dashboard.local" = {
         extraConfig = ''
           reverse_proxy localhost:8082
         '';
       };
-      "jellyfin.local" = {
+      "http://jellyfin.local" = {
         extraConfig = ''
           reverse_proxy localhost:8096
         '';
       };
-      "jellyseer.local" = {
+      "http://jellyseer.local" = {
         extraConfig = ''
           reverse_proxy localhost:5055
         '';
       };
-      "sonarr.local" = {
+      "http://sonarr.local" = {
         extraConfig = ''
           reverse_proxy localhost:8989
         '';
       };
-      "prowlarr.local" = {
+      "http://prowlarr.local" = {
         extraConfig = ''
           reverse_proxy localhost:9696
         '';
       };
-      "audiobookshelf.local" = {
+      "http://audiobookshelf.local" = {
         extraConfig = ''
           reverse_proxy localhost:8000
         '';
       };
-      "paperless.local" = {
+      "http://paperless.local" = {
         extraConfig = ''
           reverse_proxy localhost:28981
         '';
       };
-      "home-assistant.local" = {
+      "http://home-assistant.local" = {
         extraConfig = ''
           reverse_proxy localhost:8123
         '';
       };
-      "pinchflat.local" = {
+      "http://pinchflat.local" = {
         extraConfig = ''
           reverse_proxy localhost:8945
         '';
       };
-      "immich.local" = {
+      "http://immich.local" = {
         extraConfig = ''
           reverse_proxy localhost:2283
         '';
       };
-      "open-webui.local" = {
+      "http://open-webui.local" = {
         extraConfig = ''
           reverse_proxy localhost:8083
         '';
       };
-      "qbit.local" = {
+      "http://qbit.local" = {
         extraConfig = ''
           reverse_proxy localhost:8080
         '';
       };
-      "n8n.local" = {
+      "http://n8n.local" = {
         extraConfig = ''
           reverse_proxy localhost:5678
         '';
       };
-      "uptime-kuma.local" = {
+      "http://uptime-kuma.local" = {
         extraConfig = ''
           reverse_proxy localhost:4000
+        '';
+      };
+      "http://vikunja.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:3456
+        '';
+      };
+      "http://syncthing.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8384
         '';
       };
       #"resourcepack.local:80" = {
@@ -378,12 +398,22 @@
         };
       }
       {
-        widget = {
-          type = "audiobookshelf";
-          url = "https://audiobookshelf.local";
-          key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmZDY2MTEyZi05YWZhLTQ5MGYtODczMC1lODU0YTMxNTRlNjUiLCJ1c2VybmFtZSI6InJvb3QiLCJpYXQiOjE3NTEyNTUxMjJ9.pDUDkMuxRdpjPV9H4HM0cBLfpJyp1p1Z7yM6d8MpuVg";
+        openweathermap = {
+          label = "Seattle";
+          target = "_blank";
+          latitude = "";
+          longitude = "";
+          units = "metric";
+
         };
       }
+      #{
+      #  widget = {
+      #    type = "podcasts";
+      #    url = "http://localhost:8000";
+      #    key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmZDY2MTEyZi05YWZhLTQ5MGYtODczMC1lODU0YTMxNTRlNjUiLCJ1c2VybmFtZSI6InJvb3QiLCJpYXQiOjE3NTEyNTUxMjJ9.pDUDkMuxRdpjPV9H4HM0cBLfpJyp1p1Z7yM6d8MpuVg";
+      #  };
+      #}
   ];
     services = [
       {
@@ -391,43 +421,49 @@
           {
             "Jellyfinn" = {
               description = "Free Software Media System - Server Backend & API";
-              href = "https://jellyfin.local";
+              href = "http://jellyfin.local";
             };
           }
           {
             "Jellyseer" = {
               description = "Open-source media request and discovery manager for Jellyfin";
-              href = "https://jellyseer.local";
+              href = "http://jellyseer.local";
             };
           }
           {
             "Sonarr" = {
               description = "Smart PVR (Personal Video Recorder) for bit users";
-              href = "https://sonarr.local";
+              href = "http://sonarr.local";
             };
           }
           {
             "Prowlarr" = {
               description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "https://prowlarr.local";
+              href = "http://prowlarr.local";
             };
           }
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
-              href = "https://pinchflat.local";
+              href = "http://pinchflat.local";
             };
           }
           {
             "AudioBookShelf" = {
               description = "Self-hosted audiobook and podcast server";
-              href = "https://audiobookshelf.local";
+              href = "http://audiobookshelf.local";
             };
           }
           {
             "Immich" = {
               description = "High performance self-hosted photo and video management solution";
-              href = "https://immich.local";
+              href = "http://immich.local";
+            };
+          }
+          {
+            "Vikunja" = {
+              description = "The to-do app to organize your life.";
+              href = "http://vikunja.local";
             };
           }
         ];
@@ -441,9 +477,15 @@
           #  };
           #}
           {
+            "Uptime-kuma" = {
+              description = "A fancy self-hosted monitoring tool";
+              href = "http://uptime-kuma.local";
+            };
+          }
+          {
             "Mealie" = {
               description = "Self hosted recipe manager and meal planner";
-              href = "https://mealie.local";
+              href = "http://mealie.local";
             };
           }
           {
@@ -459,39 +501,29 @@
             };
           }
           {
-            "Open-webui" = {
-              description = "Chat UI for Self Hosted LLMs";
-              href = "https://open-webui.local";
+            "Syncthing" = {
+              description = "Open Source Continuous File Synchronization";
+              href = "http://syncthing.local";
             };
           }
           {
-            "Uptime-kuma" = {
-              description = "A fancy self-hosted monitoring tool";
-              href = "https://uptime-kuma.local";
+            "Open-webui" = {
+              description = "Chat UI for Self Hosted LLMs";
+              href = "http://open-webui.local";
             };
           }
           {
             "n8n" = {
               description = "Automation GUI for Self Hosted LLMs";
-              href = "https://n8n.local";
+              href = "http://n8n.local";
             };
           }
-        ];
-      }
-      {
-        "Most Visited" = [
           #{
-          #  "Home Assistant" = {
-          #    description = "Open source home automation that puts local control and privacy first";
-          #    href = "https://home-assistant.local";
+          #  "Github" = {
+          #    description = "Link to personal github repo";
+          #    href = "https://github.com/cameroncarlg";
           #  };
           #}
-          {
-            "Github" = {
-              description = "Link to personal github repo";
-              href = "https://github.com/cameroncarlg";
-            };
-          }
         ];
       }
     ];
@@ -514,6 +546,16 @@
       PORT = "4000";
     };
   };
+
+  services.vikunja = {
+    enable = true;
+    frontendScheme = "https";
+    frontendHostname = "vikunja";
+  };
+
+  ##service.actual = {
+  ##  enable = true;
+  #};
 
   #services.emacs = {
   #  enable = true;
@@ -622,6 +664,10 @@
     open-webui
     n8n
     uptime-kuma
+    vikunja
+    syncthing
+    #meshcentral
+    #actual-server
     #firefly-iii
     #navidrome
     #fosrl-pangolin
@@ -645,8 +691,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 ];
-  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 ];
+  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 ];
+  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

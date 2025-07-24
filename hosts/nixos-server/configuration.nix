@@ -16,6 +16,11 @@
 
   # Garbage Collection
   nix.settings.auto-optimise-store = true;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -52,7 +57,13 @@
     127.0.0.1 uptime-kuma.local
     127.0.0.1 vikunja.local
     127.0.0.1 syncthing.local
+    127.0.0.1 ntfy.local
     192.168.0.18 mealie.local
+    192.168.0.18 jellyfin.local
+    192.168.0.18 jellyseer.local
+    192.168.0.18 dashboard.local
+    192.168.0.18 open-webui.local
+    192.168.0.18 uptime-kuma.local
   '';
   
   time.timeZone = "America/Los_Angeles";
@@ -397,16 +408,16 @@
           target = "_blank";
         };
       }
-      {
-        openweathermap = {
-          label = "Seattle";
-          target = "_blank";
-          latitude = "";
-          longitude = "";
-          units = "metric";
+      #{
+      #  openweathermap = {
+      #    label = "Seattle";
+      #    target = "_blank";
+      #    latitude = "47.6";
+      #    longitude = "-122.33";
+      #    units = "metric";
 
-        };
-      }
+      #  };
+      #}
       #{
       #  widget = {
       #    type = "podcasts";
@@ -518,6 +529,12 @@
               href = "http://n8n.local";
             };
           }
+          {
+            "ntfy" = {
+              description = "Automated multi-push notification system";
+              href = "http://ntfy.local";
+            };
+          }
           #{
           #  "Github" = {
           #    description = "Link to personal github repo";
@@ -551,6 +568,14 @@
     enable = true;
     frontendScheme = "https";
     frontendHostname = "vikunja";
+  };
+
+  services.ntfy-sh = {
+    enable = true;
+    settings = {
+      listen-http = ":8081";
+      base-url = "https://ntfy.example";
+    };
   };
 
   ##service.actual = {
@@ -666,6 +691,8 @@
     uptime-kuma
     vikunja
     syncthing
+    ntfy-sh
+    baobab
     #meshcentral
     #actual-server
     #firefly-iii
@@ -691,8 +718,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 ];
-  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 ];
+  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
+  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

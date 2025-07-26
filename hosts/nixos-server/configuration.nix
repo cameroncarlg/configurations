@@ -2,8 +2,8 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-# { config, pkgs, ... }:
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+# { pkgs, ... }:
 
 {
   imports =
@@ -58,13 +58,56 @@
     127.0.0.1 vikunja.local
     127.0.0.1 syncthing.local
     127.0.0.1 ntfy.local
-    192.168.0.18 mealie.local
-    192.168.0.18 jellyfin.local
-    192.168.0.18 jellyseer.local
-    192.168.0.18 dashboard.local
-    192.168.0.18 open-webui.local
-    192.168.0.18 uptime-kuma.local
+    127.0.0.1 gitlab.local
+    127.0.0.1 files.local
+    127.0.0.1 test.com
   '';
+
+  # First certificate: Caddy internal for services
+  # Second certificate: For client mtls trust
+  security.pki.certificates = [
+    ''
+      -----BEGIN CERTIFICATE-----
+      MIIByDCCAW2gAwIBAgIQbUzX8IhPLgLTWHeDb9Xg2DAKBggqhkjOPQQDAjAwMS4w
+      LAYDVQQDEyVDYWRkeSBMb2NhbCBBdXRob3JpdHkgLSAyMDI1IEVDQyBSb290MB4X
+      DTI1MDcyNTA2MTg1OFoXDTI1MDgwMTA2MTg1OFowMzExMC8GA1UEAxMoQ2FkZHkg
+      TG9jYWwgQXV0aG9yaXR5IC0gRUNDIEludGVybWVkaWF0ZTBZMBMGByqGSM49AgEG
+      CCqGSM49AwEHA0IABJi5HeJBItmuqV90VCUVQb7cbCbzJ4MQ7GzHTV0SXmJhzx4t
+      hcpml+YNu07WYM/kWAz4tj+jXinqX0mJAKeEaGWjZjBkMA4GA1UdDwEB/wQEAwIB
+      BjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBR+Vi9NZKR7UnNuewsk8tdy
+      kkUSOzAfBgNVHSMEGDAWgBSEaEJ/xxR/HEip527Pbq8Xb/sHizAKBggqhkjOPQQD
+      AgNJADBGAiEAiQPffBe7lGVbQeaH7iZguYXpHtw6IIVR96T+d+fRXqICIQDwxcB+
+      ZDHSV91FBejgf9ELMOwXHaMjqQ+Cf1yLJlt5NQ==
+      -----END CERTIFICATE-----
+    ''
+  ];
+
+  environment.etc."client_ca.pem" = {
+    text = ''
+      -----BEGIN CERTIFICATE-----
+      MIIDEzCCAfugAwIBAgIUKEdh6YtrwFnAimRzB35ONfuIK8QwDQYJKoZIhvcNAQEL
+      BQAwGTEXMBUGA1UEAwwOVGVzdCBDbGllbnQgQ0EwHhcNMjUwNzI1MTc1MDU4WhcN
+      MjYwNzI1MTc1MDU4WjAZMRcwFQYDVQQDDA5UZXN0IENsaWVudCBDQTCCASIwDQYJ
+      KoZIhvcNAQEBBQADggEPADCCAQoCggEBAMm+SYpUwXkWzCIPBggAjWieV0Q976Mu
+      f2myIJRhJEQt3aOUafQzxjkfEfIEMe9QwoevVO72j+MRZV57OPYD55bl14buXSBg
+      oeSaCw8TkUY7++AeGeVFckA816EWiAyI6wn3w0DMJ46KL6bmwBTvydIna6GTTfQv
+      FpKGoJGP22r0W4SAPPGgGTXA1oSYmow45jEHi779lE+x6YRnS41B1Enf0gqbah+k
+      wPkao/MSCd837U7u17d9LqBo3jj0FBGzxIVgW87jWzXN5OEnbIfx8ZQnV9Se8MCA
+      vIfZme8LyK72O78cYnTzutbvvqs7XgVmMKQ2UGA09xyXd+YwaqVMyD8CAwEAAaNT
+      MFEwHQYDVR0OBBYEFLhCPhYefVXpYY34oZ4Qe7xzDH0EMB8GA1UdIwQYMBaAFLhC
+      PhYefVXpYY34oZ4Qe7xzDH0EMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQEL
+      BQADggEBACAITUcjg414nNYE2pPGSzkvsP6uebJo9WdY7sLxjPWDd8dILoAmvplT
+      HVtFCYFVHoXajPAQUYItx9LAaSbFrPJGM5tNkIK8dUu0S+IOq7tclcpfcarHDp7W
+      UD6bgEpYEChYUIoUT312fVnvSy7CPMQN3danEmDTCa3/7a8RbXrYOp7dFFiDy+T/
+      kVGONlnX7HsZOQACkuUQ/eKsaRXm0sgT0Rjwy1PYFzeoc6lzzZ2/kMfV5HXmLn8A
+      qNC96RXLul2bv03ybVI8+26vvCi4DoDzMP3ZFk8m73MMkF157H+L2ZUQcjrbIuLF
+      8hrSIJ/swN00HVc4UN35AWZaE4dakGU=
+      -----END CERTIFICATE-----
+    '';
+    mode = "0655";
+  };
+
+  security.pki.certificateFiles = [ config.environment.etc."client_ca.pem".source ];
   
   time.timeZone = "America/Los_Angeles";
 
@@ -98,22 +141,21 @@
   services.jellyfin = {
     enable = true;
     user = "cameron";
-    openFirewall = true;
   };
 
   services.jellyseerr = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
   };
 
   services.sonarr = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
   };
 
   services.prowlarr = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
   };
 
   services.privoxy = {
@@ -253,17 +295,23 @@
   #  enable = true;
   #};
 
-  #services.gitlab = {
-  #  enable = true;
-  #  databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
-  #  initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
-  #  secrets = {
-  #    secretFile = pkgs.writeText "secret" "Aig5zaic";
-  #    otpFile = pkgs.writeText "otpsecret" "Riew9mue";
-  #    dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
-  #    jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
-  #  };
-  #};
+  services.gitlab = {
+    enable = true;
+    #host = "gitlab.local";
+    #port = 443;
+    #https = false;
+    databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
+    initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
+    secrets = {
+      secretFile = pkgs.writeText "secret" "Aig5zaic";
+      otpFile = pkgs.writeText "otpsecret" "Riew9mue";
+      dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
+      jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
+      activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+      activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+      activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+    };
+  };
 
   #services.nginx = {
   #  enable = true;
@@ -275,7 +323,7 @@
   #  };
   #};
 
-  #systemd.services.gitlab-backup.environment.BACKUP = "dump";
+  systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
   services.ollama = {
     enable = true;
@@ -292,93 +340,139 @@
   ###  enable = true;
   ###  openFirewall = true;
   #};
+  #
+  # 
+  # trust_pool file /etc/client_ca.pem
 
   services.caddy = {
     enable = true;
+    globalConfig = ''
+      skip_install_trust
+    '';
     virtualHosts = {
-      "http://mealie.local" = {
+      "mealie.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:9000
         '';
       };
-      "http://dashboard.local" = {
+      "dashboard.local" = {
         extraConfig = ''
           reverse_proxy localhost:8082
         '';
       };
-      "http://jellyfin.local" = {
+      "jellyfin.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8096
         '';
       };
-      "http://jellyseer.local" = {
+      "jellyseer.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:5055
         '';
       };
-      "http://sonarr.local" = {
+      "sonarr.local" = {
         extraConfig = ''
           reverse_proxy localhost:8989
         '';
       };
-      "http://prowlarr.local" = {
+      "prowlarr.local" = {
         extraConfig = ''
           reverse_proxy localhost:9696
         '';
       };
-      "http://audiobookshelf.local" = {
+      "audiobookshelf.local" = {
         extraConfig = ''
           reverse_proxy localhost:8000
         '';
       };
-      "http://paperless.local" = {
+      "paperless.local" = {
         extraConfig = ''
           reverse_proxy localhost:28981
         '';
       };
-      "http://home-assistant.local" = {
+      "home-assistant.local" = {
         extraConfig = ''
           reverse_proxy localhost:8123
         '';
       };
-      "http://pinchflat.local" = {
+      "pinchflat.local" = {
         extraConfig = ''
           reverse_proxy localhost:8945
         '';
       };
-      "http://immich.local" = {
+      "immich.local" = {
         extraConfig = ''
           reverse_proxy localhost:2283
         '';
       };
-      "http://open-webui.local" = {
+      "open-webui.local" = {
         extraConfig = ''
           reverse_proxy localhost:8083
         '';
       };
-      "http://qbit.local" = {
+      "qbit.local" = {
         extraConfig = ''
           reverse_proxy localhost:8080
         '';
       };
-      "http://n8n.local" = {
+      "n8n.local" = {
         extraConfig = ''
           reverse_proxy localhost:5678
         '';
       };
-      "http://uptime-kuma.local" = {
+      "uptime-kuma.local" = {
         extraConfig = ''
           reverse_proxy localhost:4000
         '';
       };
-      "http://vikunja.local" = {
+      "vikunja.local" = {
         extraConfig = ''
           reverse_proxy localhost:3456
         '';
       };
-      "http://syncthing.local" = {
+      "syncthing.local" = {
         extraConfig = ''
           reverse_proxy localhost:8384
+        '';
+      };
+      "ntfy.local" = {
+        extraConfig = ''
+          reverse_proxy localhost:8081
+        '';
+      };
+      "gitlab.local" = {
+        extraConfig = ''
+          reverse_proxy unix//run/gitlab/gitlab-workhorse.socket
+        '';
+      };
+      "files.local" = {
+        extraConfig = ''
+          root * /var/www
+          file_server browse
+        '';
+      };
+      "example.local" = {
+        extraConfig = ''
+          respond "Hello, world!"
+          tls internal
         '';
       };
       #"resourcepack.local:80" = {
@@ -392,7 +486,7 @@
 
   services.homepage-dashboard = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
     allowedHosts = "dashboard.local";
     widgets = [
       {
@@ -477,6 +571,12 @@
               href = "http://vikunja.local";
             };
           }
+          {
+            "File Server" = {
+              description = "Filer server for files between linux and windows";
+              href = "http://files.local";
+            };
+          }
         ];
       }
       {
@@ -535,6 +635,12 @@
               href = "http://ntfy.local";
             };
           }
+          {
+            "GitLab" = {
+              description = "Self hosted GitLab server; code repository and cicd experiments";
+              href = "http://gitlab.local";
+            };
+          }
           #{
           #  "Github" = {
           #    description = "Link to personal github repo";
@@ -548,13 +654,13 @@
 
   services.open-webui = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
     port = 8083;
   };
 
   services.n8n = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
   };
 
   services.uptime-kuma = {
@@ -629,6 +735,8 @@
     #];
   };
 
+  users.users.caddy.extraGroups = [ "gitlab" ];
+
   # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "cameron";
@@ -665,7 +773,7 @@
     python3
     aichat
     remmina
-    gitlab
+    #gitlab
     nushell
     claude-code
     ollama
@@ -718,8 +826,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
-  networking.firewall.allowedUDPPorts = [ 9000 80 443 8191 8096 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

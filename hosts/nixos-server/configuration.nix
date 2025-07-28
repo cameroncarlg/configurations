@@ -26,8 +26,13 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking = {
+    nameservers = [ "127.0.0.1" "::1" ];
+    hostName = "nixos";
+    networkmanager.dns = "none";
+  };
+
+  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -38,7 +43,6 @@
 
   # /etc/hosts
   networking.extraHosts = ''
-    127.0.0.1 mealie.local
     127.0.0.1 dashboard.local
     127.0.0.1 jellyfin.local
     127.0.0.1 jellyseer.local
@@ -61,6 +65,7 @@
     127.0.0.1 gitlab.local
     127.0.0.1 files.local
     127.0.0.1 test.com
+    127.0.0.1 actual.com
   '';
 
   # First certificate: Caddy internal for services
@@ -126,6 +131,67 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  # DNS
+  #services.avahi = {
+  #  enable = true;
+  #  nssmdns6 = true;
+  #  nssmdns4 = true;
+  #  openFirewall = true;
+  #  publish = {
+  #    enable = true;
+  #    addresses = true;
+  #    #domain = true;
+  #    #hinfo = true;
+  #    #userServices = true;
+  #    workstation = true;
+  #  };
+  #  #extraConfig = ''
+  #  #  aliases=mealie.local
+  #  #'';
+  #};
+
+  #services.dnsmasq = {
+  #  enable = true;
+  #  settings = {
+  #    address = [
+  #      "/https://jellyfin.local/192.168.0.18"
+  #      "/mealie.local/192.168.0.18"
+  #    ];
+  #    server = [
+  #      "8.8.8.8"
+  #      "8.8.4.4"
+  #    ];
+  #    interface = "wlp7s0";
+  #    listen-address = "192.168.0.18";
+  #    bind-interfaces = true;
+  #    no-resolv = false;
+  #    cache-size = 1000;
+  #  };
+  #};
+  
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    # Settings reference:
+    # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+      # Add this to test if dnscrypt-proxy is actually used to resolve DNS requests
+      # query_log.file = "/var/log/dnscrypt-proxy/query.log";
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+
+      # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+      # server_names = [ ... ];
+    };
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -136,7 +202,12 @@
       ALLOW_SIGNUP = "true";
     };
   };
+
   services.mullvad-vpn.enable = true;
+
+  services.actual = {
+    enable = true;
+  };
 
   services.jellyfin = {
     enable = true;
@@ -193,13 +264,6 @@
     passwordFile = "/etc/paperless-admin-pass";
   };
 
-  ##services.firefly-iii = {
-  ##  enable = true;
-  ##  settings = {
-  ##    APP_KEY_FILE = "/home/cameron/app-key.txt";
-  ##  };
-  #};
-
   #services.home-assistant = {
   #  enable = true;
   #  extraComponents = [
@@ -221,16 +285,6 @@
   #    # Includes dependencies for a basic setup
   #    # https://www.home-assistant.io/integrations/default_config/
   #    default_config = {};
-  #  };
-  #};
-
-  #services.minecraft-servers = {
-  #  enable = true;
-  #  eula = true;
-  #  servers = {
-  #    cool-server1 = {
-  #      enable = true;
-  #    };
   #  };
   #};
 
@@ -274,30 +328,14 @@
   #  openFirewall = true;
   #};
 
-  #services.dnsmasq = {
-  #  enable = true;
-  #  settings = {
-  #    domain-needed = true;
-  #    bogus-priv = true;
-  #    "listen-address" = [ "127.0.0.1" "192.168.0.18"];
-  #    address = [
-  #      "/jellyfin/192.168.0.18"
-  #      "/mealie/192.168.0.18"
-  #    ];
-  #    server = [
-  #      "1.1.1.1"
-  #      "8.8.8.8"
-  #    ];
-  #  };
-  #};
-
   #services.jmusicbot = {
   #  enable = true;
   #};
+  #
 
   services.gitlab = {
     enable = true;
-    #host = "gitlab.local";
+    host = "gitlab.local";
     #port = 443;
     #https = false;
     databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
@@ -313,36 +351,21 @@
     };
   };
 
-  #services.nginx = {
-  #  enable = true;
-  #  recommendedProxySettings = true;
-  #  virtualHosts = {
-  #    localhost = {
-  #      locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
-  #    };
-  #  };
-  #};
-
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
   services.ollama = {
     enable = true;
     port = 11434;
     #acceleration = "rocm";
-    openFirewall = true;
+    #openFirewall = true;
   };
 
-  ###services.nextjs-ollama-llm-ui = {
-  ###  enable = true;
-  ###};
-
-  ###services.navidrome= {
-  ###  enable = true;
-  ###  openFirewall = true;
-  #};
-  #
-  # 
-  # trust_pool file /etc/client_ca.pem
+  services.navidrome= {
+    enable = true;
+    settings = {
+      MusicFolder = "/home/cameron/Music";
+    };
+  };
 
   services.caddy = {
     enable = true;
@@ -363,17 +386,17 @@
       };
       "dashboard.local" = {
         extraConfig = ''
-          reverse_proxy localhost:8082
-        '';
-      };
-      "jellyfin.local" = {
-        extraConfig = ''
           tls internal {
             client_auth {
               mode require_and_verify
               trust_pool file /etc/client_ca.pem
             }
           }
+          reverse_proxy localhost:8082
+        '';
+      };
+      "jellyfin.local" = {
+        extraConfig = ''
           reverse_proxy localhost:8096
         '';
       };
@@ -390,97 +413,203 @@
       };
       "sonarr.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8989
         '';
       };
       "prowlarr.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:9696
+        '';
+      };
+      "vaultwarden.local" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8222
+        '';
+      };
+      "navidrome.local" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:4533
         '';
       };
       "audiobookshelf.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8000
         '';
       };
       "paperless.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:28981
         '';
       };
       "home-assistant.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8123
         '';
       };
       "pinchflat.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8945
         '';
       };
       "immich.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:2283
         '';
       };
       "open-webui.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8083
         '';
       };
       "qbit.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8080
         '';
       };
       "n8n.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:5678
         '';
       };
       "uptime-kuma.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:4000
         '';
       };
       "vikunja.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:3456
         '';
       };
       "syncthing.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8384
         '';
       };
       "ntfy.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8081
         '';
       };
       "gitlab.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy unix//run/gitlab/gitlab-workhorse.socket
         '';
       };
       "files.local" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           root * /var/www
           file_server browse
         '';
       };
-      "example.local" = {
-        extraConfig = ''
-          respond "Hello, world!"
-          tls internal
-        '';
-      };
-      #"resourcepack.local:80" = {
-      #  extraConfig = ''
-      #    root * /var/www/minecraft-resource-packs
-      #    file_server
-      # '';
-      #};
     };
   };
 
@@ -494,31 +623,16 @@
           cpu = true;
           disk = "/";
           memory = true;
+          network = true;
         };
       }
       {
         search = {
-          provider = "duckduckgo";
-          target = "_blank";
+          provider = "brave";
+          focus = true;
+          showSearchSuggestions = true;
         };
       }
-      #{
-      #  openweathermap = {
-      #    label = "Seattle";
-      #    target = "_blank";
-      #    latitude = "47.6";
-      #    longitude = "-122.33";
-      #    units = "metric";
-
-      #  };
-      #}
-      #{
-      #  widget = {
-      #    type = "podcasts";
-      #    url = "http://localhost:8000";
-      #    key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmZDY2MTEyZi05YWZhLTQ5MGYtODczMC1lODU0YTMxNTRlNjUiLCJ1c2VybmFtZSI6InJvb3QiLCJpYXQiOjE3NTEyNTUxMjJ9.pDUDkMuxRdpjPV9H4HM0cBLfpJyp1p1Z7yM6d8MpuVg";
-      #  };
-      #}
   ];
     services = [
       {
@@ -526,127 +640,137 @@
           {
             "Jellyfinn" = {
               description = "Free Software Media System - Server Backend & API";
-              href = "http://jellyfin.local";
+              href = "https://jellyfin.local";
             };
           }
           {
             "Jellyseer" = {
               description = "Open-source media request and discovery manager for Jellyfin";
-              href = "http://jellyseer.local";
+              href = "https://jellyseer.local";
             };
           }
           {
             "Sonarr" = {
               description = "Smart PVR (Personal Video Recorder) for bit users";
-              href = "http://sonarr.local";
+              href = "https://sonarr.local";
             };
           }
           {
             "Prowlarr" = {
               description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "http://prowlarr.local";
+              href = "https://prowlarr.local";
             };
           }
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
-              href = "http://pinchflat.local";
+              href = "https://pinchflat.local";
             };
           }
           {
             "AudioBookShelf" = {
               description = "Self-hosted audiobook and podcast server";
-              href = "http://audiobookshelf.local";
+              href = "https://audiobookshelf.local";
+            };
+          }
+          {
+            "Navidrome" = {
+              description = "Self-hosted music (Spotify replacement) server";
+              href = "https://navidrome.local";
             };
           }
           {
             "Immich" = {
               description = "High performance self-hosted photo and video management solution";
-              href = "http://immich.local";
+              href = "https://immich.local";
             };
           }
           {
             "Vikunja" = {
               description = "The to-do app to organize your life.";
-              href = "http://vikunja.local";
-            };
-          }
-          {
-            "File Server" = {
-              description = "Filer server for files between linux and windows";
-              href = "http://files.local";
+              href = "https://vikunja.local";
             };
           }
         ];
       }
       {
-        "Automation" = [
-          #{
-          #  "Home Assistant" = {
-          #    description = "Open source home automation that puts local control and privacy first";
-          #    href = "https://home-assistant.local";
-          #  };
-          #}
+        "Localhost" = [
+          {
+            "Home Assistant" = {
+              description = "Open source home automation that puts local control and privacy first";
+              href = "https://home-assistant.local";
+            };
+          }
           {
             "Uptime-kuma" = {
               description = "A fancy self-hosted monitoring tool";
-              href = "http://uptime-kuma.local";
+              href = "https://uptime-kuma.local";
             };
           }
           {
             "Mealie" = {
               description = "Self hosted recipe manager and meal planner";
-              href = "http://mealie.local";
+              href = "https://mealie.local";
             };
           }
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
-              href = "http://localhost:28981";
+              href = "https://paperless.local";
             };
           }
           {
             "Vaultwarden" = {
               description = "Unofficial Bitwarden compatible server written in Rust";
-              href = "http://localhost:8222";
+              href = "https://vaultwarden.local";
             };
           }
           {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
-              href = "http://syncthing.local";
+              href = "https://syncthing.local";
             };
           }
           {
             "Open-webui" = {
               description = "Chat UI for Self Hosted LLMs";
-              href = "http://open-webui.local";
+              href = "https://open-webui.local";
+            };
+          }
+        ];
+      }
+      {
+        "CICD Automation" = [
+                    {
+            "GitLab" = {
+              description = "Self hosted GitLab server; code repository and cicd experiments";
+              href = "https://gitlab.local";
             };
           }
           {
-            "n8n" = {
-              description = "Automation GUI for Self Hosted LLMs";
-              href = "http://n8n.local";
+            "Github" = {
+              description = "Link to personal github repo";
+              href = "https://github.com/cameroncarlg";
             };
           }
           {
             "ntfy" = {
               description = "Automated multi-push notification system";
-              href = "http://ntfy.local";
+              href = "https://ntfy.local";
             };
           }
           {
-            "GitLab" = {
-              description = "Self hosted GitLab server; code repository and cicd experiments";
-              href = "http://gitlab.local";
+            "n8n" = {
+              description = "Automation GUI for Self Hosted LLMs";
+              href = "https://n8n.local";
             };
           }
-          #{
-          #  "Github" = {
-          #    description = "Link to personal github repo";
-          #    href = "https://github.com/cameroncarlg";
-          #  };
-          #}
+          {
+            "File Server" = {
+              description = "Filer server for files between linux and windows";
+              href = "https://files.local";
+            };
+          }
         ];
       }
     ];
@@ -683,14 +807,6 @@
       base-url = "https://ntfy.example";
     };
   };
-
-  ##service.actual = {
-  ##  enable = true;
-  #};
-
-  #services.emacs = {
-  #  enable = true;
-  #};
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -826,8 +942,8 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
-  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 5353 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

@@ -335,7 +335,7 @@
 
   services.gitlab = {
     enable = true;
-    host = "gitlab.local";
+    #host = "gitlab.local";
     #port = 443;
     #https = false;
     databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";

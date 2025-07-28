@@ -27,9 +27,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking = {
-    nameservers = [ "127.0.0.1" "::1" ];
+    #nameservers = [ "127.0.0.1" "::1" ];
     hostName = "nixos";
-    networkmanager.dns = "none";
+    #networkmanager.dns = "none";
   };
 
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -43,27 +43,28 @@
 
   # /etc/hosts
   networking.extraHosts = ''
-    127.0.0.1 dashboard.local
-    127.0.0.1 jellyfin.local
-    127.0.0.1 jellyseer.local
-    127.0.0.1 sonarr.local
-    127.0.0.1 prowlarr.local
-    127.0.0.1 audiobookshelf.local
-    127.0.0.1 paperless.local
-    127.0.0.1 home-assistant.local
-    127.0.0.1 pinchflat.local
-    127.0.0.1 navidrome.local
-    127.0.0.1 immich.local
-    127.0.0.1 resourcepack.local
-    127.0.0.1 open-webui.local
-    127.0.0.1 qbit.local
-    127.0.0.1 n8n.local
-    127.0.0.1 uptime-kuma.local
-    127.0.0.1 vikunja.local
-    127.0.0.1 syncthing.local
-    127.0.0.1 ntfy.local
-    127.0.0.1 gitlab.local
-    127.0.0.1 files.local
+    127.0.0.1 dashboard.lan
+    127.0.0.1 sonarr.lan
+    127.0.0.1 jellyfin.lan
+    127.0.0.1 mealie.lan
+    127.0.0.1 jellyseer.lan
+    127.0.0.1 prowlarr.lan
+    127.0.0.1 audiobookshelf.lan
+    127.0.0.1 paperless.lan
+    127.0.0.1 home-assistant.lan
+    127.0.0.1 pinchflat.lan
+    127.0.0.1 navidrome.lan
+    127.0.0.1 immich.lan
+    127.0.0.1 resourcepack.lan
+    127.0.0.1 open-webui.lan
+    127.0.0.1 qbit.lan
+    127.0.0.1 n8n.lan
+    127.0.0.1 uptime-kuma.lan
+    127.0.0.1 vikunja.lan
+    127.0.0.1 syncthing.lan
+    127.0.0.1 ntfy.lan
+    127.0.0.1 gitlab.lan
+    127.0.0.1 files.lan
     127.0.0.1 test.com
     127.0.0.1 actual.com
   '';
@@ -154,43 +155,53 @@
   #  enable = true;
   #  settings = {
   #    address = [
-  #      "/https://jellyfin.local/192.168.0.18"
+  #      "/jellyfin.lan/192.168.0.18"
   #      "/mealie.local/192.168.0.18"
   #    ];
-  #    server = [
-  #      "8.8.8.8"
-  #      "8.8.4.4"
-  #    ];
-  #    interface = "wlp7s0";
-  #    listen-address = "192.168.0.18";
-  #    bind-interfaces = true;
-  #    no-resolv = false;
-  #    cache-size = 1000;
+  #    #server = [
+  #    #  "8.8.8.8"
+  #    #  "8.8.4.4"
+  #    #];
+  #    #interface = "wlp7s0";
+  #    #listen-address = "192.168.0.18";
+  #    #bind-interfaces = true;
+  #    #no-resolv = false;
+  #    #cache-size = 1000;
   #  };
   #};
   
-  services.dnscrypt-proxy2 = {
-    enable = true;
-    # Settings reference:
-    # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
-    settings = {
-      ipv6_servers = true;
-      require_dnssec = true;
-      # Add this to test if dnscrypt-proxy is actually used to resolve DNS requests
-      query_log.file = "/var/log/dnscrypt-proxy/query.log";
-      sources.public-resolvers = {
-        urls = [
-          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-        ];
-        cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
-        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-      };
-
-      # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
-      server_names = [ "a-and-a" ];
-    };
-  };
+  #services.dnscrypt-proxy2 = {
+  #  enable = true;
+  #  # Settings reference:
+  #  # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
+  #  settings = {
+  #    ipv6_servers = true;
+  #    ipv4_servers = true;
+  #    dnscrypt_servers = true;
+  #    require_dnssec = true;
+  #    listen_addresses = [ "127.0.0.1:53" ];
+  #    # Add this to test if dnscrypt-proxy is actually used to resolve DNS requests
+  #    query_log.file = "/var/log/dnscrypt-proxy/query.log";
+  #    sources.public-resolvers = {
+  #      urls = [
+  #        "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+  #        "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+  #      ];
+  #      cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
+  #      minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+  #    };
+  #    # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+  #    server_names = [ "a-and-a" ];
+  #    static = {
+  #      "mealie.lan" = {
+  #        stamp = "sdns://gAMBAAABAAAAAAABAAHCoAAAEAAAABAAAACw";
+  #      };
+  #      "jellyfin.lan" = {
+  #        stamp = "sdns://AQcAAAAAAAAADDE5Mi4xNjguMC4xOAAQMi5kbnNjcnlwdC1jZXJ0Lg";
+  #      };
+  #    };
+  #  };
+  #};
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -335,9 +346,9 @@
 
   services.gitlab = {
     enable = true;
-    #host = "gitlab.local";
+    host = "gitlab.lan";
     #port = 443;
-    #https = false;
+    #https = true;
     databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
     initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
     secrets = {
@@ -373,7 +384,7 @@
       skip_install_trust
     '';
     virtualHosts = {
-      "mealie.local" = {
+      "mealie.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -384,7 +395,7 @@
           reverse_proxy localhost:9000
         '';
       };
-      "dashboard.local" = {
+      "dashboard.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -395,12 +406,12 @@
           reverse_proxy localhost:8082
         '';
       };
-      "jellyfin.local" = {
+      "jellyfin.lan" = {
         extraConfig = ''
           reverse_proxy localhost:8096
         '';
       };
-      "jellyseer.local" = {
+      "jellyseer.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -411,7 +422,7 @@
           reverse_proxy localhost:5055
         '';
       };
-      "sonarr.local" = {
+      "sonarr.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -422,7 +433,7 @@
           reverse_proxy localhost:8989
         '';
       };
-      "prowlarr.local" = {
+      "prowlarr.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -433,7 +444,7 @@
           reverse_proxy localhost:9696
         '';
       };
-      "vaultwarden.local" = {
+      "vaultwarden.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -444,7 +455,7 @@
           reverse_proxy localhost:8222
         '';
       };
-      "navidrome.local" = {
+      "navidrome.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -455,7 +466,7 @@
           reverse_proxy localhost:4533
         '';
       };
-      "audiobookshelf.local" = {
+      "audiobookshelf.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -466,7 +477,7 @@
           reverse_proxy localhost:8000
         '';
       };
-      "paperless.local" = {
+      "paperless.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -477,7 +488,7 @@
           reverse_proxy localhost:28981
         '';
       };
-      "home-assistant.local" = {
+      "home-assistant.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -488,7 +499,7 @@
           reverse_proxy localhost:8123
         '';
       };
-      "pinchflat.local" = {
+      "pinchflat.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -499,7 +510,7 @@
           reverse_proxy localhost:8945
         '';
       };
-      "immich.local" = {
+      "immich.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -510,7 +521,7 @@
           reverse_proxy localhost:2283
         '';
       };
-      "open-webui.local" = {
+      "open-webui.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -521,7 +532,7 @@
           reverse_proxy localhost:8083
         '';
       };
-      "qbit.local" = {
+      "qbit.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -532,7 +543,7 @@
           reverse_proxy localhost:8080
         '';
       };
-      "n8n.local" = {
+      "n8n.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -543,7 +554,7 @@
           reverse_proxy localhost:5678
         '';
       };
-      "uptime-kuma.local" = {
+      "uptime-kuma.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -554,7 +565,7 @@
           reverse_proxy localhost:4000
         '';
       };
-      "vikunja.local" = {
+      "vikunja.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -565,7 +576,7 @@
           reverse_proxy localhost:3456
         '';
       };
-      "syncthing.local" = {
+      "syncthing.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -576,7 +587,7 @@
           reverse_proxy localhost:8384
         '';
       };
-      "ntfy.local" = {
+      "ntfy.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -587,7 +598,7 @@
           reverse_proxy localhost:8081
         '';
       };
-      "gitlab.local" = {
+      "gitlab.lan" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -616,7 +627,7 @@
   services.homepage-dashboard = {
     enable = true;
     openFirewall = false;
-    allowedHosts = "dashboard.local";
+    allowedHosts = "dashboard.lan";
     widgets = [
       {
         resources = {
@@ -640,55 +651,55 @@
           {
             "Jellyfinn" = {
               description = "Free Software Media System - Server Backend & API";
-              href = "https://jellyfin.local";
+              href = "https://jellyfin.lan";
             };
           }
           {
             "Jellyseer" = {
               description = "Open-source media request and discovery manager for Jellyfin";
-              href = "https://jellyseer.local";
+              href = "https://jellyseer.lan";
             };
           }
           {
             "Sonarr" = {
               description = "Smart PVR (Personal Video Recorder) for bit users";
-              href = "https://sonarr.local";
+              href = "https://sonarr.lan";
             };
           }
           {
             "Prowlarr" = {
               description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "https://prowlarr.local";
+              href = "https://prowlarr.lan";
             };
           }
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
-              href = "https://pinchflat.local";
+              href = "https://pinchflat.lan";
             };
           }
           {
             "AudioBookShelf" = {
               description = "Self-hosted audiobook and podcast server";
-              href = "https://audiobookshelf.local";
+              href = "https://audiobookshelf.lan";
             };
           }
           {
             "Navidrome" = {
               description = "Self-hosted music (Spotify replacement) server";
-              href = "https://navidrome.local";
+              href = "https://navidrome.lan";
             };
           }
           {
             "Immich" = {
               description = "High performance self-hosted photo and video management solution";
-              href = "https://immich.local";
+              href = "https://immich.lan";
             };
           }
           {
             "Vikunja" = {
               description = "The to-do app to organize your life.";
-              href = "https://vikunja.local";
+              href = "https://vikunja.lan";
             };
           }
         ];
@@ -698,43 +709,43 @@
           {
             "Home Assistant" = {
               description = "Open source home automation that puts local control and privacy first";
-              href = "https://home-assistant.local";
+              href = "https://home-assistant.lan";
             };
           }
           {
             "Uptime-kuma" = {
               description = "A fancy self-hosted monitoring tool";
-              href = "https://uptime-kuma.local";
+              href = "https://uptime-kuma.lan";
             };
           }
           {
             "Mealie" = {
               description = "Self hosted recipe manager and meal planner";
-              href = "https://mealie.local";
+              href = "https://mealie.lan";
             };
           }
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
-              href = "https://paperless.local";
+              href = "https://paperless.lan";
             };
           }
           {
             "Vaultwarden" = {
               description = "Unofficial Bitwarden compatible server written in Rust";
-              href = "https://vaultwarden.local";
+              href = "https://vaultwarden.lan";
             };
           }
           {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
-              href = "https://syncthing.local";
+              href = "https://syncthing.lan";
             };
           }
           {
             "Open-webui" = {
               description = "Chat UI for Self Hosted LLMs";
-              href = "https://open-webui.local";
+              href = "https://open-webui.lan";
             };
           }
         ];
@@ -744,7 +755,7 @@
                     {
             "GitLab" = {
               description = "Self hosted GitLab server; code repository and cicd experiments";
-              href = "https://gitlab.local";
+              href = "https://gitlab.lan";
             };
           }
           {
@@ -756,19 +767,19 @@
           {
             "ntfy" = {
               description = "Automated multi-push notification system";
-              href = "https://ntfy.local";
+              href = "https://ntfy.lan";
             };
           }
           {
             "n8n" = {
               description = "Automation GUI for Self Hosted LLMs";
-              href = "https://n8n.local";
+              href = "https://n8n.lan";
             };
           }
           {
             "File Server" = {
               description = "Filer server for files between linux and windows";
-              href = "https://files.local";
+              href = "https://files.lan";
             };
           }
         ];

@@ -7,6 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    helix.url = "github:/helix-editor/helix/master";
     #nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     #wezterm.url = "github:wezterm/wezterm/main";
     #nushell.url = "github:nushell/nushell/0.103.0";
@@ -16,7 +17,7 @@
     #};
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {
     
     darwinConfigurations."Camerons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       specialArgs = { inherit inputs; };

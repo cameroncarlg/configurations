@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ lib, config, pkgs, ... }:
+{ inputs, lib, config, pkgs, ... }:
 # { pkgs, ... }:
 
 {
@@ -68,6 +68,7 @@
     127.0.0.1 actual.home
     127.0.0.1 silver.home
     127.0.0.1 searxng.home
+    127.0.0.1 ntfy.home
   '';
   
   # First certificate: Caddy internal for services
@@ -363,7 +364,6 @@
 
   services.gitlab = {
     enable = true;
-    host = "gitlab.home";
     #port = 443;
     #https = true;
     databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
@@ -991,6 +991,7 @@
     #minecraft
     minecraft-server
     #factorio
+    inputs.helix.packages."${pkgs.system}".helix
 
     # Homelab 
     #home-assistant

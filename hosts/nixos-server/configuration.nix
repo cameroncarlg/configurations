@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, lib, config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 # { pkgs, ... }:
 
 {
@@ -27,9 +27,12 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking = {
-    #nameservers = [ "127.0.0.1" ];
+    nameservers = [ "127.0.0.1" "::1" ];
     hostName = "nixos";
-    #networkmanager.dns = "none";
+    # If using dhcpcd:
+    dhcpcd.extraConfig = "nohook resolv.conf";
+    # If using NetworkManager:
+    networkmanager.dns = "none";
   };
 
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -43,32 +46,7 @@
 
   # /etc/hosts
   networking.extraHosts = ''
-    127.0.0.1 dashboard.home
-    127.0.0.1 sonarr.home
-    127.0.0.1 jellyfin.home
-    127.0.0.1 jellyseer.home
-    127.0.0.1 prowlarr.home
-    127.0.0.1 audiobookshelf.home
-    127.0.0.1 paperless.home
-    127.0.0.1 home-assistant.home
-    127.0.0.1 pinchflat.home
-    127.0.0.1 navidrome.home
-    127.0.0.1 immich.home
-    127.0.0.1 resourcepack.home
-    127.0.0.1 open-webui.home
-    127.0.0.1 qbit.home
-    127.0.0.1 n8n.home
-    127.0.0.1 uptime-kuma.home
-    127.0.0.1 vikunja.home
-    127.0.0.1 syncthing.home
-    127.0.0.1 ntfy.home
-    127.0.0.1 gitlab.home
-    127.0.0.1 files.home
-    127.0.0.1 test.com
-    127.0.0.1 actual.home
-    127.0.0.1 silver.home
-    127.0.0.1 searxng.home
-    127.0.0.1 ntfy.home
+    127.0.0.1 localhost
   '';
   
   # First certificate: Caddy internal for services
@@ -117,7 +95,9 @@
     mode = "0655";
   };
  
-  #environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''dashboard.home 192.168.0.18'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.18'';
+  # 
+  #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
   environment.etc."silverbullet.env".text = ''SB_USER=cameron:jdnede'';
   
@@ -138,78 +118,42 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # DNS
-  #services.avahi = {
-  #  enable = true;
-  #  nssmdns6 = true;
-  #  nssmdns4 = true;
-  #  openFirewall = true;
-  #  publish = {
-  #    enable = true;
-  #    addresses = true;
-  #    #domain = true;
-  #    #hinfo = true;
-  #    #userServices = true;
-  #    workstation = true;
-  #  };
-  #  #extraConfig = ''
-  #  #  aliases=mealie.local
-  #  #'';
-  #};
-
-  #services.dnsmasq = {
-  #  enable = true;
-  #  settings = {
-  #    address = [
-  #      "/jellyfin.home/192.168.0.18"
-  #      "/mealie.home/192.168.0.18"
-  #    ];
-  #    #server = [
-  #    #  "8.8.8.8"
-  #    #  "8.8.4.4"
-  #    #];
-  #    #interface = "wlp7s0";
-  #    #listen-address = "192.168.0.18";
-  #    #bind-interfaces = true;
-  #    #no-resolv = false;
-  #    #cache-size = 1000;
-  #  };
-  #};
-  
-  #services.dnscrypt-proxy2 = {
-  #  enable = true;
-  #  # Settings reference:
-  #  # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
-  #  settings = {
-  #    ipv6_servers = true;
-  #    ipv4_servers = true;
-  #    cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
-  #    block_undelegated = false;
-  #    dnscrypt_servers = true;
-  #    require_dnssec = true;
-  #    listen_addresses = [ "0.0.0.0:53" ];
-  #    # Add this to test if dnscrypt-proxy is actually used to resolve DNS requests
-  #    query_log.file = "/var/log/dnscrypt-proxy/query.log";
-  #    sources.public-resolvers = {
-  #      urls = [
-  #        "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-  #        "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-  #      ];
-  #      cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
-  #      minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-  #    };
-  #    # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
-  #    server_names = [ "a-and-a" ];
-  #    #static = {
-  #    #  "mealie.home" = {
-  #    #    stamp = "sdns://gAMBAAABAAAAAAABAAHCoAAAEAAAABAAAACw";
-  #    #  };
-  #    #  "jellyfin.home" = {
-  #    #    stamp = "sdns://AQcAAAAAAAAADDE5Mi4xNjguMC4xOAAQMi5kbnNjcnlwdC1jZXJ0Lg";
-  #    #  };
-  #    #};
-  #  };
-  #};
+  # Encrypted DNS
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    # Settings reference:
+    # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+      query_log.file = "/var/log/dnscrypt-proxy/query.log";
+      cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
+      #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";
+      #ipv4_servers = true;
+      #block_undelegated = false;
+      #dnscrypt_servers = true;
+      listen_addresses = [ "0.0.0.0:53" ];
+      # Add this to test if dnscrypt-proxy is actually used to resolve DNS requests
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+      # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+      server_names = [ "a-and-a" ];
+      #static = {
+      #  "mealie.home" = {
+      #    stamp = "sdns://gAMBAAABAAAAAAABAAHCoAAAEAAAABAAAACw";
+      #  };
+      #  "jellyfin.home" = {
+      #    stamp = "sdns://AQcAAAAAAAAADDE5Mi4xNjguMC4xOAAQMi5kbnNjcnlwdC1jZXJ0Lg";
+      #  };
+      #};
+    };
+  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -417,7 +361,7 @@
       skip_install_trust
     '';
     virtualHosts = {
-      "mealie.home" = {
+      "mealie.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -428,7 +372,7 @@
           reverse_proxy localhost:9000
         '';
       };
-      "dashboard.home" = {
+      "dashboard.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -439,12 +383,18 @@
           reverse_proxy localhost:8082
         '';
       };
-      "jellyfin.home" = {
+      "jellyfin.mynixoshome.io" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           reverse_proxy localhost:8096
         '';
       };
-      "jellyseer.home" = {
+      "jellyseer.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -455,7 +405,7 @@
           reverse_proxy localhost:5055
         '';
       };
-      "sonarr.home" = {
+      "sonarr.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -466,7 +416,7 @@
           reverse_proxy localhost:8989
         '';
       };
-      "prowlarr.home" = {
+      "prowlarr.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -477,7 +427,7 @@
           reverse_proxy localhost:9696
         '';
       };
-      "vaultwarden.home" = {
+      "vaultwarden.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -488,7 +438,7 @@
           reverse_proxy localhost:8222
         '';
       };
-      "navidrome.home" = {
+      "navidrome.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -499,7 +449,7 @@
           reverse_proxy localhost:4533
         '';
       };
-      "audiobookshelf.home" = {
+      "audiobookshelf.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -510,7 +460,7 @@
           reverse_proxy localhost:8000
         '';
       };
-      "paperless.home" = {
+      "paperless.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -532,7 +482,7 @@
       #    reverse_proxy localhost:8123
       #  '';
       #};
-      "pinchflat.home" = {
+      "pinchflat.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -543,7 +493,7 @@
           reverse_proxy localhost:8945
         '';
       };
-      "immich.home" = {
+      "immich.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -554,7 +504,7 @@
           reverse_proxy localhost:2283
         '';
       };
-      "open-webui.home" = {
+      "open-webui.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -565,7 +515,7 @@
           reverse_proxy localhost:8083
         '';
       };
-      "qbit.home" = {
+      "qbit.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -576,7 +526,7 @@
           reverse_proxy localhost:8080
         '';
       };
-      "n8n.home" = {
+      "n8n.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -587,18 +537,18 @@
           reverse_proxy localhost:5678
         '';
       };
-      "uptime-kuma.home" = {
-        extraConfig = ''
-          tls internal {
-            client_auth {
-              mode require_and_verify
-              trust_pool file /etc/client_ca.pem
-            }
-          }
-          reverse_proxy localhost:4000
-        '';
-      };
-      "vikunja.home" = {
+      #"uptime-kuma.mynixoshome.io" = {
+      #  extraConfig = ''
+      #    tls internal {
+      #      client_auth {
+      #        mode require_and_verify
+      #        trust_pool file /etc/client_ca.pem
+      #      }
+      #    }
+      #    reverse_proxy localhost:4000
+      #  '';
+      #};
+      "vikunja.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -609,7 +559,7 @@
           reverse_proxy localhost:3456
         '';
       };
-      "syncthing.home" = {
+      "syncthing.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -620,7 +570,7 @@
           reverse_proxy localhost:8384
         '';
       };
-      "ntfy.home" = {
+      "ntfy.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -631,7 +581,7 @@
           reverse_proxy localhost:8081
         '';
       };
-      "silver.home" = {
+      "silver.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -642,7 +592,7 @@
           reverse_proxy localhost:3000
         '';
       };
-      "actual.home" = {
+      "actual.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -653,7 +603,7 @@
           reverse_proxy localhost:3001
         '';
       };
-      "searxng.home" = {
+      "searxng.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -664,7 +614,7 @@
           reverse_proxy localhost:8080
         '';
       };
-      "gitlab.home" = {
+      "gitlab.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -675,7 +625,7 @@
           reverse_proxy unix//run/gitlab/gitlab-workhorse.socket
         '';
       };
-      "files.home" = {
+      "files.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -693,7 +643,7 @@
   services.homepage-dashboard = {
     enable = true;
     openFirewall = false;
-    allowedHosts = "dashboard.home";
+    allowedHosts = "dashboard.mynixoshome.io";
     widgets = [
       {
         resources = {
@@ -717,49 +667,49 @@
           {
             "Jellyfinn" = {
               description = "Free Software Media System - Server Backend & API";
-              href = "https://jellyfin.home";
+              href = "https://jellyfin.mynixoshome.io";
             };
           }
           {
             "Jellyseer" = {
               description = "Open-source media request and discovery manager for Jellyfin";
-              href = "https://jellyseer.home";
+              href = "https://jellyseer.mynixoshome.io";
             };
           }
           {
             "Sonarr" = {
               description = "Smart PVR (Personal Video Recorder) for bit users";
-              href = "https://sonarr.home";
+              href = "https://sonarr.mynixoshome.io";
             };
           }
           {
             "Prowlarr" = {
               description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "https://prowlarr.home";
+              href = "https://prowlarr.mynixoshome.io";
             };
           }
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
-              href = "https://pinchflat.home";
+              href = "https://pinchflat.mynixoshome.io";
             };
           }
           {
             "AudioBookShelf" = {
               description = "Self-hosted audiobook and podcast server";
-              href = "https://audiobookshelf.home";
+              href = "https://audiobookshelf.mynixoshome.io";
             };
           }
           {
             "Navidrome" = {
               description = "Self-hosted music (Spotify replacement) server";
-              href = "https://navidrome.home";
+              href = "https://navidrome.mynixoshome.io";
             };
           }
           {
             "Immich" = {
               description = "High performance self-hosted photo and video management solution";
-              href = "https://immich.home";
+              href = "https://immich.mynixoshome.io";
             };
           }
         ];
@@ -775,49 +725,49 @@
           {
             "Vikunja" = {
               description = "The to-do app to organize your life.";
-              href = "https://vikunja.home";
+              href = "https://vikunja.mynixoshome.io";
             };
           }
           {
             "Searxng" = {
               description = "Privacy-respecting, hackable metasearch engine";
-              href = "https://searxng.home";
+              href = "https://searxng.mynixoshome.io";
             };
           }
           {
             "Mealie" = {
               description = "Self hosted recipe manager and meal planner";
-              href = "https://mealie.home";
+              href = "https://mealie.mynixoshome.io";
             };
           }
           {
             "Actual" = {
               description = "A local-first personal finance app";
-              href = "https://actual.home";
+              href = "https://actual.mynixoshome.io";
             };
           }
           {
             "Vaultwarden" = {
               description = "Unofficial Bitwarden compatible server written in Rust";
-              href = "https://vaultwarden.home";
+              href = "https://vaultwarden.mynixoshome.io";
             };
           }
           {
             "Uptime-kuma" = {
               description = "A fancy self-hosted monitoring tool";
-              href = "https://uptime-kuma.home";
+              href = "https://uptime-mynixoshome.io.home";
             };
           }
           {
             "Open-webui" = {
               description = "Chat UI for Self Hosted LLMs";
-              href = "https://open-webui.home";
+              href = "https://open-mynixoshome.io.home";
             };
           }
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
-              href = "https://paperless.home";
+              href = "https://paperless.mynixoshome.io";
             };
           }
         ];
@@ -827,7 +777,7 @@
                     {
             "GitLab" = {
               description = "Self hosted GitLab server; code repository and cicd experiments";
-              href = "https://gitlab.home";
+              href = "https://gitlab.mynixoshome.io";
             };
           }
           {
@@ -839,25 +789,25 @@
           {
             "ntfy" = {
               description = "Automated multi-push notification system";
-              href = "https://ntfy.home";
+              href = "https://ntfy.mynixoshome.io";
             };
           }
           {
             "n8n" = {
               description = "Automation GUI for Self Hosted LLMs";
-              href = "https://n8n.home";
+              href = "https://n8n.mynixoshome.io";
             };
           }
           {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
-              href = "https://syncthing.home";
+              href = "https://syncthing.mynixoshome.io";
             };
           }
           {
             "File Server" = {
               description = "Filer server for files between linux and windows";
-              href = "https://files.home";
+              href = "https://files.mynixoshome.io";
             };
           }
         ];
@@ -876,18 +826,18 @@
     openFirewall = false;
   };
 
-  services.uptime-kuma = {
-    enable = true;
-    settings = {
-      #NODE_EXTRA_CA_CERTS = {
-      #  _type = "literalExpression";
+  #services.uptime-kuma = {
+  #  enable = true;
+  #  settings = {
+  #    #NODE_EXTRA_CA_CERTS = {
+  #    #  _type = "literalExpression";
 
-      #  #text = "config.security.pki.caBundle";
-      #  text = "etc/ssl";
-      #};
-      PORT = "4000";
-    };
-  };
+  #    #  #text = "config.security.pki.caBundle";
+  #    #  text = "etc/ssl";
+  #    #};
+  #    PORT = "4000";
+  #  };
+  #};
 
   services.vikunja = {
     enable = true;
@@ -991,7 +941,7 @@
     #minecraft
     minecraft-server
     #factorio
-    inputs.helix.packages."${pkgs.system}".helix
+    #inputs.helix.packages."${pkgs.system}".helix
 
     # Homelab 
     #home-assistant

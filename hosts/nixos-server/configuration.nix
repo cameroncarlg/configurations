@@ -228,6 +228,9 @@
   services.paperless = {
     enable = true;
     passwordFile = "/etc/paperless-admin-pass";
+    settings = {
+      PAPERLESS_URL = "https://paperless.mynixoshome.io";
+    };
   };
 
   services.silverbullet = {
@@ -294,6 +297,8 @@
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
+    guiAddress = "0.0.0.0:8384";
+    settings.options.localAnnounceEnabled = true;
   };
 
   #services.factorio = {
@@ -325,12 +330,12 @@
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
-  services.ollama = {
-    enable = true;
-    port = 11434;
-    #acceleration = "rocm";
-    #openFirewall = true;
-  };
+  #services.ollama = {
+  #  enable = true;
+  #  port = 11434;
+  #  #acceleration = "rocm";
+  #  #openFirewall = true;
+  #};
 
   services.searx = {
     enable = true;
@@ -348,7 +353,7 @@
     };
   };
 
-  services.navidrome= {
+  services.navidrome = {
     enable = true;
     settings = {
       MusicFolder = "/home/cameron/Music";
@@ -504,7 +509,7 @@
           reverse_proxy localhost:2283
         '';
       };
-      "open-webui.mynixoshome.io" = {
+      "open.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -537,6 +542,17 @@
           reverse_proxy localhost:5678
         '';
       };
+      "syncthing.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8384
+        '';
+      };
       #"uptime-kuma.mynixoshome.io" = {
       #  extraConfig = ''
       #    tls internal {
@@ -557,17 +573,6 @@
             }
           }
           reverse_proxy localhost:3456
-        '';
-      };
-      "syncthing.mynixoshome.io" = {
-        extraConfig = ''
-          tls internal {
-            client_auth {
-              mode require_and_verify
-              trust_pool file /etc/client_ca.pem
-            }
-          }
-          reverse_proxy localhost:8384
         '';
       };
       "ntfy.mynixoshome.io" = {
@@ -627,12 +632,6 @@
       };
       "files.mynixoshome.io" = {
         extraConfig = ''
-          tls internal {
-            client_auth {
-              mode require_and_verify
-              trust_pool file /etc/client_ca.pem
-            }
-          }
           root * /var/www
           file_server browse
         '';
@@ -746,28 +745,28 @@
               href = "https://actual.mynixoshome.io";
             };
           }
-          {
-            "Vaultwarden" = {
-              description = "Unofficial Bitwarden compatible server written in Rust";
-              href = "https://vaultwarden.mynixoshome.io";
-            };
-          }
-          {
-            "Uptime-kuma" = {
-              description = "A fancy self-hosted monitoring tool";
-              href = "https://uptime-mynixoshome.io.home";
-            };
-          }
-          {
-            "Open-webui" = {
-              description = "Chat UI for Self Hosted LLMs";
-              href = "https://open-mynixoshome.io.home";
-            };
-          }
+          #{
+          #  "Uptime-kuma" = {
+          #    description = "A fancy self-hosted monitoring tool";
+          #    href = "https://uptime-mynixoshome.io.home";
+          #  };
+          #}
+          #{
+          #  "Open-webui" = {
+          #    description = "Chat UI for Self Hosted LLMs";
+          #    href = "https://open.mynixoshome.io.home";
+          #  };
+          #}
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
               href = "https://paperless.mynixoshome.io";
+            };
+          }
+          {
+            "Vaultwarden" = {
+              description = "Unofficial Bitwarden compatible server written in Rust";
+              href = "https://vaultwarden.mynixoshome.io";
             };
           }
         ];
@@ -849,7 +848,8 @@
     enable = true;
     settings = {
       listen-http = ":8081";
-      base-url = "https://ntfy.example";
+      behind-proxy = true;
+      base-url = "https://ntfy.mynixoshome.io";
     };
   };
 
@@ -936,7 +936,7 @@
     remmina
     #gitlab
     nushell
-    claude-code
+    #claude-code
     privoxy
     #minecraft
     minecraft-server

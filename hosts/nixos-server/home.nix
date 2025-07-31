@@ -52,14 +52,15 @@
     nh # Yet another Nix helper
     gh # GitHub CLI
     tig # Text mode interface for git
-    #nerdfonts # NerdFonts
     fira-code # FiraCode
     openvpn
-    #nmap
     nil
     nixfmt-rfc-style
     openssl
     dig
+    #gemini-cli
+    #nmap
+    #nerdfonts # NerdFonts
     #neofetch
     #traceroute
     # broot # Terminal File System navigator

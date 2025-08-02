@@ -126,6 +126,7 @@
     settings = {
       ipv6_servers = true;
       require_dnssec = true;
+      cache = true;
       query_log.file = "/var/log/dnscrypt-proxy/query.log";
       cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
       #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";

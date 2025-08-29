@@ -302,15 +302,13 @@
     settings.options.localAnnounceEnabled = true;
   };
 
-  #services.factorio = {
-  #  enable = true;
-  #  openFirewall = true;
-  #};
-
-  #services.jmusicbot = {
-  #  enable = true;
-  #};
-  #
+  services.factorio = {
+    enable = true;
+    openFirewall = true;
+    game-name = "nixlan";
+    game-password = "asdfasdf";
+    description = "Nixos hosted factorio server";
+  };
 
   services.gitlab = {
     enable = true;
@@ -331,12 +329,12 @@
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
-  #services.ollama = {
-  #  enable = true;
-  #  port = 11434;
-  #  #acceleration = "rocm";
-  #  #openFirewall = true;
-  #};
+  services.ollama = {
+    enable = true;
+    port = 11434;
+    acceleration = "rocm";
+    openFirewall = true;
+  };
 
   services.searx = {
     enable = true;
@@ -529,7 +527,7 @@
               trust_pool file /etc/client_ca.pem
             }
           }
-          reverse_proxy localhost:8080
+          reverse_proxy localhost:8082
         '';
       };
       "n8n.mynixoshome.io" = {
@@ -633,6 +631,12 @@
       };
       "files.mynixoshome.io" = {
         extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
           root * /var/www
           file_server browse
         '';
@@ -752,12 +756,12 @@
           #    href = "https://uptime-mynixoshome.io.home";
           #  };
           #}
-          #{
-          #  "Open-webui" = {
-          #    description = "Chat UI for Self Hosted LLMs";
-          #    href = "https://open.mynixoshome.io.home";
-          #  };
-          #}
+          {
+            "Open-webui" = {
+              description = "Chat UI for Self Hosted LLMs";
+              href = "https://open.mynixoshome.io";
+            };
+          }
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
@@ -799,6 +803,12 @@
             };
           }
           {
+            "qbit" = {
+              description = "Automation GUI for Self Hosted LLMs";
+              href = "https://qbit.mynixoshome.io";
+            };
+          }
+          {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
               href = "https://syncthing.mynixoshome.io";
@@ -825,6 +835,10 @@
     enable = true;
     openFirewall = false;
   };
+
+  #services.jmusicbot = {
+  #  enable = true;
+  #};
 
   #services.uptime-kuma = {
   #  enable = true;
@@ -891,7 +905,7 @@
     shell = pkgs.nushell;
     isNormalUser = true;
     description = "cameron";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     #packages = with pkgs; [
     #  thunderbird
     #];
@@ -932,16 +946,19 @@
     mullvad-vpn
     nginx
     qbittorrent-enhanced
-    python3
+    #python3
     aichat
     remmina
+    discord
+    python3Packages.discordpy
+    uv
+    #parrot
     #gitlab
     nushell
     #claude-code
     privoxy
     #minecraft
     minecraft-server
-    #factorio
     #inputs.helix.packages."${pkgs.system}".helix
 
     # Homelab 
@@ -967,6 +984,9 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # Enable Docker
+  virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];

@@ -94,8 +94,21 @@
     '';
     mode = "0655";
   };
+
+  # Headscale ACL for subnet routing
+  #environment.etc."headscale/acl.yaml" = {
+  #  text = ''
+  #    acls:
+  #      - action: accept
+  #        src:
+  #          - "*"
+  #        dst:
+  #          - "192.168.0.0/24:*"
+  #  '';
+  #  mode = "0644";
+  #};
  
-  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.18'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.15'';
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
@@ -144,7 +157,7 @@
         minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
       };
       # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
-      server_names = [ "a-and-a" ];
+      server_names = [ "cloudflare" ];
       #static = {
       #  "mealie.home" = {
       #    stamp = "sdns://gAMBAAABAAAAAAABAAHCoAAAEAAAABAAAACw";
@@ -241,6 +254,20 @@
     envFile = "/etc/silverbullet.env";
   };
 
+  #services.headscale = {
+  #  enable = true;
+  #  address = "0.0.0.0";
+  #  port = 8080;
+  #  settings = {
+  #    server_url = "https://headscale.mynixoshome.io";
+  #    dns = {
+  #      base_domain = "mynixoshome.io";
+  #    };
+  #    ip_prefixes = [ "100.64.0.0/10" ];
+  #    policy.path = "/etc/headscale/acl.yaml";
+  #  };
+  #};
+
   #services.home-assistant = {
   #  enable = true;
   #  extraComponents = [
@@ -310,22 +337,22 @@
     description = "Nixos hosted factorio server";
   };
 
-  services.gitlab = {
-    enable = true;
-    #port = 443;
-    #https = true;
-    databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
-    initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
-    secrets = {
-      secretFile = pkgs.writeText "secret" "Aig5zaic";
-      otpFile = pkgs.writeText "otpsecret" "Riew9mue";
-      dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
-      jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
-      activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-      activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-      activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-    };
-  };
+  #services.gitlab = {
+  #  enable = true;
+  #  #port = 443;
+  #  #https = true;
+  #  databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
+  #  initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
+  #  secrets = {
+  #    secretFile = pkgs.writeText "secret" "Aig5zaic";
+  #    otpFile = pkgs.writeText "otpsecret" "Riew9mue";
+  #    dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
+  #    jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
+  #    activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #    activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #    activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #  };
+  #};
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
@@ -339,7 +366,7 @@
   services.searx = {
     enable = true;
     settings = {
-      server.port = 8080;
+      server.port = 8084;
       server.bind_address = "0.0.0.0";
       server.secret_key = "@SEARX_SECRET_KEY@";
       engines = lib.singleton
@@ -527,7 +554,7 @@
               trust_pool file /etc/client_ca.pem
             }
           }
-          reverse_proxy localhost:8082
+          reverse_proxy localhost:8085
         '';
       };
       "n8n.mynixoshome.io" = {
@@ -615,7 +642,7 @@
               trust_pool file /etc/client_ca.pem
             }
           }
-          reverse_proxy localhost:8080
+          reverse_proxy localhost:8084
         '';
       };
       "gitlab.mynixoshome.io" = {
@@ -639,6 +666,17 @@
           }
           root * /var/www
           file_server browse
+        '';
+      };
+      "headscale.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8080
         '';
       };
     };
@@ -803,15 +841,15 @@
             };
           }
           {
-            "qbit" = {
-              description = "Automation GUI for Self Hosted LLMs";
-              href = "https://qbit.mynixoshome.io";
-            };
-          }
-          {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
               href = "https://syncthing.mynixoshome.io";
+            };
+          }
+          {
+            "Qbit" = {
+              description = "Automation GUI for Self Hosted LLMs";
+              href = "https://qbit.mynixoshome.io";
             };
           }
           {
@@ -867,6 +905,12 @@
       base-url = "https://ntfy.mynixoshome.io";
     };
   };
+
+  #services.qbittorrent = {
+  #  enable = true;
+  #  webuiPort = "8085";
+  #  openFirewall = true;
+  #};
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -926,6 +970,21 @@
 
   # Install fish.
   programs.fish.enable = true;
+
+  # Install steam
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+  };
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "steam"
+    "steam-original"
+    "steam-unwrapped"
+    "steam-run"
+  ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

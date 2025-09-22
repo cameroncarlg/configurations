@@ -95,6 +95,10 @@
   #  (pkgs.writeShellScriptBin "fetchsha" ''
   #    nix-prefetch-github-latest-release --meta -v $1 $2
   #  '')
+  # 
+    (pkgs.writeShellScriptBin "vpnc" ''
+      curl -sS https://am.i.mullvad.net/json
+      '')
   ];
 
 

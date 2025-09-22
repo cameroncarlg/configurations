@@ -33,6 +33,39 @@
     dhcpcd.extraConfig = "nohook resolv.conf";
     # If using NetworkManager:
     networkmanager.dns = "none";
+
+    # enable NAT
+    #nat.enable = true;
+    #nat.externalInterface = "eth0";
+    #nat.internalInterfaces = [ "wg0" ];
+
+    #wireguard.interfaces = {
+    #  wg0 = {
+    #    ips = [ "10.67.192.78/32" ];
+    #    listenPort = 51820;
+    #    privateKey = "yP2twFtvJ0uhrZ2jL/3mCKPkE2nTrT6ZAVSYxhKHIEY=";
+    #    
+    #    # This allows the wireguard server to route your traffic to the internet and hence be like a VPN
+    #    # For this to work you have to set the dnsserver IP of your router (or dnsserver of choice) in your clients
+    #    postSetup = ''
+    #      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+    #    '';
+
+    #    # This undoes the above command
+    #    postShutdown = ''
+    #      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+    #    '';
+
+    #    peers = [
+    #      {
+    #        publicKey = "qcA8EEYD70XMSDyzxoi6XdTaGK4CP937zG8o9hO+BXQ=";
+    #        allowedIPs = [ "10.100.0.2/32" ];
+    #        #endpoint = "192.168.0.15:51820";
+    #        persistentKeepalive = 25;
+    #      }
+    #    ];
+    #  };
+    #};
   };
 
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -1011,6 +1044,8 @@
     discord
     python3Packages.discordpy
     uv
+    baobab
+    wireguard-tools
     #parrot
     #gitlab
     nushell
@@ -1049,7 +1084,7 @@
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];
-  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 5353 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 5353 51820 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

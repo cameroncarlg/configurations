@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -122,10 +122,10 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-    ".local/bin/nulix-wezterm.nu" = {
-      source = "./nulix-wezterm.nu";
-      executable = true;
-    };
+    #".local/bin/nulix-wezterm.nu" = {
+    #  source = ./nulix-wezterm.nu;
+    #  executable = true;
+    #};
   };
 
   # Home Manager can also manage your environment variables through

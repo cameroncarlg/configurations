@@ -8,13 +8,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     helix.url = "github:/helix-editor/helix/master";
-    #nix-minecraft.url = "github:Infinidoge/nix-minecraft";
-    #wezterm.url = "github:wezterm/wezterm/main";
-    #nushell.url = "github:nushell/nushell/0.103.0";
-    #nushell = {
-    #  url = "github:nushell/nushell";
-    #  ref = "c98642647878b4f66fb7e38388a3973071b0e27b";
-    #};
+    wezterm.url = "github:wezterm/wezterm?dir=nix";
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {
@@ -35,6 +29,7 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/nixos-server/configuration.nix
 
@@ -46,6 +41,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.cameron = import ./hosts/nixos-server/home.nix;
             # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+            home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
       };

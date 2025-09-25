@@ -982,7 +982,7 @@
     shell = pkgs.nushell;
     isNormalUser = true;
     description = "cameron";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     #packages = with pkgs; [
     #  thunderbird
     #];
@@ -1080,7 +1080,7 @@
   services.openssh.enable = true;
 
   # Enable Docker
-  virtualisation.docker.enable = true;
+  #virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];

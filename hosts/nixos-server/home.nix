@@ -58,6 +58,7 @@
     nixfmt-rfc-style
     openssl
     dig
+    yazi
     #gemini-cli
     #nmap
     #nerdfonts # NerdFonts
@@ -100,11 +101,7 @@
       curl -sS https://am.i.mullvad.net/json
       '')
 
-    #(pkgs.writeShellScriptBin "test" ''
-    #  #!${pkgs.nushell}/bin/nu
-
-    #  print hello
-    #'')
+    (pkgs.writers.writeNuBin "test" (builtins.readFile ./nulix-wezterm.nu))
 
   ];
 

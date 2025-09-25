@@ -1,3 +1,4 @@
+{ inputs, ... }:
 {
   imports = [
     ./nushell.nix

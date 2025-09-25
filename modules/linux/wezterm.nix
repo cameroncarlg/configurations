@@ -1,10 +1,12 @@
+{ pkgs, inputs, ... }:
+
 {
   programs.wezterm = {
     enable = true;
+    package = inputs.wezterm.packages.${pkgs.system}.default;
     extraConfig = ''
       local wezterm = require 'wezterm'
       local config = wezterm.config_builder()
-
       config.color_scheme = 'Catppuccin Mocha'
       config.use_fancy_tab_bar = false
       config.show_new_tab_button_in_tab_bar = false
@@ -13,7 +15,6 @@
       config.font = wezterm.font("Fira Code")
       config.enable_scroll_bar = true
       config.hide_mouse_cursor_when_typing = false
-
       config.keys = {
         { key = 'Enter', mods = 'ALT', action = wezterm.action.SplitHorizontal {domain = 'CurrentPaneDomain' }},
         { key = 'Enter', mods = 'ALT|SHIFT', action = wezterm.action.SplitVertical {domain = 'CurrentPaneDomain' }},

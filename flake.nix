@@ -22,6 +22,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.cameron = ./hosts/macbook/home.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
         }
       ];
     };

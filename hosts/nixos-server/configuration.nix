@@ -210,6 +210,8 @@
     enable = true;
     settings = {
       ALLOW_SIGNUP = "true";
+      SECURITY_MAX_LOGIN_ATTEMPTS = 100;
+      SECURITY_USER_LOCKOUT_TIME = 1;
     };
   };
 

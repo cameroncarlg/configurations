@@ -101,7 +101,7 @@
       curl -sS https://am.i.mullvad.net/json
       '')
 
-    (pkgs.writers.writeNuBin "test" (builtins.readFile ./nulix-wezterm.nu))
+    #(pkgs.writers.writeNuBin "test" (builtins.readFile ./nulix-wezterm.nu))
 
   ];
 

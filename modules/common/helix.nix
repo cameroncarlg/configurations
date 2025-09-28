@@ -91,7 +91,7 @@
         f = ":sh helix-wezterm.sh fzf";
         g = ":sh helix-wezterm.sh lazygit";
         o = ":sh helix-wezterm.sh open";
-        r = ":sh helix-wezterm.sh run";
+        r = ":sh cargo run &> myfifo";
         s = ":sh helix-wezterm.sh test_single";
         t = ":sh helix-wezterm.sh test_all";
       };

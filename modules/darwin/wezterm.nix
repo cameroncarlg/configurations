@@ -16,7 +16,13 @@
       config.font = wezterm.font("Fira Code")
       config.enable_scroll_bar = true
       config.hide_mouse_cursor_when_typing = false
-
+      config.ssh_domains = {
+        {
+          name = 'nixos',
+          remote_address = '192.168.0.15',
+          username = 'cameron',
+        },
+      }
       config.keys = {
         { key = 'Enter', mods = 'CMD', action = wezterm.action.SplitHorizontal {domain = 'CurrentPaneDomain' }},
         { key = 'Enter', mods = 'CMD|SHIFT', action = wezterm.action.SplitVertical {domain = 'CurrentPaneDomain' }},

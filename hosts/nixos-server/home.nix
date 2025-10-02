@@ -102,6 +102,33 @@
       '')
 
     #(pkgs.writers.writeNuBin "test" (builtins.readFile ./nulix-wezterm.nu))
+    (pkgs.writers.writeNuBin "monitor" ''
+      try {
+          print "Creating named pipe 'myfifo'..."
+
+          mkfifo myfifo
+
+          print "✅ Pipe created. Now listening for output."
+          print "In another terminal, run your command and redirect its output:"
+          print "e.g., cargo run > myfifo"
+          print "Press Ctrl+C to stop and clean up."
+          print "---"
+
+          try {
+              tail -f myfifo
+          } catch {
+              # This block catches the "Operation interrupted" error when you press Ctrl+C.
+              # By leaving it empty, we "swallow" the error so it isn't printed.
+          }
+
+      } catch {
+          print "\n---"
+          print "Exiting. Cleaning up 'myfifo'..."
+          rm myfifo
+          print "✅ Pipe removed."
+      }
+    '')
+ 
 
   ];
 

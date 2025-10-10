@@ -37,7 +37,7 @@
         { key = 'j', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Down', 5 }},
         { key = 'k', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Up', 5 }},
         { key = 'l', mods = 'CMD|SHIFT', action = wezterm.action.AdjustPaneSize { 'Right', 5 }},
-        { key = 'n', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
+        { key = 'n', mods = 'CMD|SHIFT', action = wezterm.action.TogglePaneZoomState },
         { key = 'p', mods = 'CMD|SHIFT', action = wezterm.action.ToggleFullScreen },
       }
       return config

@@ -145,8 +145,6 @@
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
-  environment.etc."silverbullet.env".text = ''SB_USER=cameron:jdnede'';
-  
   time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation pro#perties.
@@ -229,20 +227,20 @@
     user = "cameron";
   };
 
-  services.jellyseerr = {
-    enable = true;
-    openFirewall = false;
-  };
+  #services.jellyseerr = {
+  #  enable = true;
+  #  openFirewall = false;
+  #};
 
-  services.sonarr = {
-    enable = true;
-    openFirewall = false;
-  };
+  #services.sonarr = {
+  #  enable = true;
+  #  openFirewall = false;
+  #};
 
-  services.prowlarr = {
-    enable = true;
-    openFirewall = false;
-  };
+  #services.prowlarr = {
+  #  enable = true;
+  #  openFirewall = false;
+  #};
 
   services.privoxy = {
     enable = true;
@@ -327,35 +325,35 @@
   #  };
   #};
 
-  services.minecraft-server = {
-    enable = true;
-    eula = true;
-    openFirewall = true; # Opens the port the server is running on (by default 25565 but in this case 43000)
-    declarative = true;
-    #whitelist = {
-    #  # This is a mapping from Minecraft usernames to UUIDs. You can use https://mcuuid.net/ to get a Minecraft UUID for a username
-    #  #username1  = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2"; #czzzAR
-    #  # username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
-    #};
-    serverProperties = {
-      level-name = "test";
-      player-idle-timeout = 5;
-      allow-flight = false;
-      server-port = 43000;
-      difficulty = 3;
-      gamemode = 0;
-      pvp = true;
-      max-players = 5;
-      motd = "Mother Fucking Minecraft Self Hosted Server";
-      # white-list = true;
-      allow-cheats = false;
-      #resource-pack = "http://resourcepack.local/dramatic_skys.zip";
-      #resource-pack-id = "b7bed5d1-d396-47ba-9974-c90784a4e123";
-      #resource-pack-sha1 = "7dc1a5857421a201ad27c356946927ec921ed896";
-      #resource-pack-prompt = "test!";
-    };
-    # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
-  };
+  #services.minecraft-server = {
+  #  enable = true;
+  #  eula = true;
+  #  openFirewall = true; # Opens the port the server is running on (by default 25565 but in this case 43000)
+  #  declarative = true;
+  #  #whitelist = {
+  #  #  # This is a mapping from Minecraft usernames to UUIDs. You can use https://mcuuid.net/ to get a Minecraft UUID for a username
+  #  #  #username1  = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2"; #czzzAR
+  #  #  # username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
+  #  #};
+  #  serverProperties = {
+  #    level-name = "test";
+  #    player-idle-timeout = 5;
+  #    allow-flight = false;
+  #    server-port = 43000;
+  #    difficulty = 3;
+  #    gamemode = 0;
+  #    pvp = true;
+  #    max-players = 5;
+  #    motd = "Mother Fucking Minecraft Self Hosted Server";
+  #    # white-list = true;
+  #    allow-cheats = false;
+  #    #resource-pack = "http://resourcepack.local/dramatic_skys.zip";
+  #    #resource-pack-id = "b7bed5d1-d396-47ba-9974-c90784a4e123";
+  #    #resource-pack-sha1 = "7dc1a5857421a201ad27c356946927ec921ed896";
+  #    #resource-pack-prompt = "test!";
+  #  };
+  #  # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
+  #};
 
   services.syncthing = {
     enable = true;
@@ -364,13 +362,13 @@
     settings.options.localAnnounceEnabled = true;
   };
 
-  services.factorio = {
-    enable = true;
-    openFirewall = true;
-    game-name = "nixlan";
-    game-password = "asdfasdf";
-    description = "Nixos hosted factorio server";
-  };
+  #services.factorio = {
+  #  enable = true;
+  #  openFirewall = true;
+  #  game-name = "nixlan";
+  #  game-password = "asdfasdf";
+  #  description = "Nixos hosted factorio server";
+  #};
 
   #services.gitlab = {
   #  enable = true;
@@ -391,12 +389,12 @@
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
-  services.ollama = {
-    enable = true;
-    port = 11434;
-    acceleration = "rocm";
-    openFirewall = true;
-  };
+  #services.ollama = {
+  #  enable = true;
+  #  port = 11434;
+  #  acceleration = "rocm";
+  #  openFirewall = true;
+  #};
 
   services.searx = {
     enable = true;
@@ -747,24 +745,24 @@
               href = "https://jellyfin.mynixoshome.io";
             };
           }
-          {
-            "Jellyseer" = {
-              description = "Open-source media request and discovery manager for Jellyfin";
-              href = "https://jellyseer.mynixoshome.io";
-            };
-          }
-          {
-            "Sonarr" = {
-              description = "Smart PVR (Personal Video Recorder) for bit users";
-              href = "https://sonarr.mynixoshome.io";
-            };
-          }
-          {
-            "Prowlarr" = {
-              description = "Index Manager/Proxy built to integrate with PVR apps";
-              href = "https://prowlarr.mynixoshome.io";
-            };
-          }
+          #{
+          #  "Jellyseer" = {
+          #    description = "Open-source media request and discovery manager for Jellyfin";
+          #    href = "https://jellyseer.mynixoshome.io";
+          #  };
+          #}
+          #{
+          #  "Sonarr" = {
+          #    description = "Smart PVR (Personal Video Recorder) for bit users";
+          #    href = "https://sonarr.mynixoshome.io";
+          #  };
+          #}
+          #{
+          #  "Prowlarr" = {
+          #    description = "Index Manager/Proxy built to integrate with PVR apps";
+          #    href = "https://prowlarr.mynixoshome.io";
+          #  };
+          #}
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
@@ -829,12 +827,12 @@
           #    href = "https://uptime-mynixoshome.io.home";
           #  };
           #}
-          {
-            "Open-webui" = {
-              description = "Chat UI for Self Hosted LLMs";
-              href = "https://open.mynixoshome.io";
-            };
-          }
+          #{
+          #  "Open-webui" = {
+          #    description = "Chat UI for Self Hosted LLMs";
+          #    href = "https://open.mynixoshome.io";
+          #  };
+          #}
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
@@ -851,30 +849,30 @@
       }
       {
         "CICD Automation" = [
-                    {
-            "GitLab" = {
-              description = "Self hosted GitLab server; code repository and cicd experiments";
-              href = "https://gitlab.mynixoshome.io";
-            };
-          }
+          #{
+          #  "GitLab" = {
+          #    description = "Self hosted GitLab server; code repository and cicd experiments";
+          #    href = "https://gitlab.mynixoshome.io";
+          #  };
+          #}
           {
             "Github" = {
               description = "Link to personal github repo";
               href = "https://github.com/cameroncarlg";
             };
           }
-          {
-            "ntfy" = {
-              description = "Automated multi-push notification system";
-              href = "https://ntfy.mynixoshome.io";
-            };
-          }
-          {
-            "n8n" = {
-              description = "Automation GUI for Self Hosted LLMs";
-              href = "https://n8n.mynixoshome.io";
-            };
-          }
+          #{
+          #  "ntfy" = {
+          #    description = "Automated multi-push notification system";
+          #    href = "https://ntfy.mynixoshome.io";
+          #  };
+          #}
+          #{
+          #  "n8n" = {
+          #    description = "Automation GUI for Self Hosted LLMs";
+          #    href = "https://n8n.mynixoshome.io";
+          #  };
+          #}
           {
             "Syncthing" = {
               description = "Open Source Continuous File Synchronization";
@@ -898,16 +896,16 @@
     ];
   };
 
-  services.open-webui = {
-    enable = true;
-    openFirewall = false;
-    port = 8083;
-  };
+  #services.open-webui = {
+  #  enable = true;
+  #  openFirewall = false;
+  #  port = 8083;
+  #};
 
-  services.n8n = {
-    enable = true;
-    openFirewall = false;
-  };
+  #services.n8n = {
+  #  enable = true;
+  #  openFirewall = false;
+  #};
 
   #services.jmusicbot = {
   #  enable = true;
@@ -932,14 +930,14 @@
     frontendHostname = "vikunja";
   };
 
-  services.ntfy-sh = {
-    enable = true;
-    settings = {
-      listen-http = ":8081";
-      behind-proxy = true;
-      base-url = "https://ntfy.mynixoshome.io";
-    };
-  };
+  #services.ntfy-sh = {
+  #  enable = true;
+  #  settings = {
+  #    listen-http = ":8081";
+  #    behind-proxy = true;
+  #    base-url = "https://ntfy.mynixoshome.io";
+  #  };
+  #};
 
   #services.qbittorrent = {
   #  enable = true;
@@ -1044,9 +1042,9 @@
     aichat
     remmina
     discord
-    python3Packages.discordpy
-    uv
-    baobab
+    #python3Packages.discordpy
+    #uv
+    #baobab
     wireguard-tools
     #parrot
     #gitlab
@@ -1060,7 +1058,7 @@
     # Homelab 
     #home-assistant
     syncthing
-    ntfy-sh
+    #ntfy-sh
     #meshcentral
     #firefly-iii
     #navidrome

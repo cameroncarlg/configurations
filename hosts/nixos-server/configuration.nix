@@ -227,6 +227,10 @@
     user = "cameron";
   };
 
+  services.tailscale = {
+    enable = true;
+  };
+
   #services.jellyseerr = {
   #  enable = true;
   #  openFirewall = false;
@@ -1038,6 +1042,7 @@
     mullvad-vpn
     nginx
     qbittorrent-enhanced
+    tailscale
     #python3
     aichat
     remmina

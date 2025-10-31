@@ -92,6 +92,10 @@
       echo "Hello, ${config.home.username}!"
     '')
 
+    (pkgs.writeShellScriptBin "rust-flake" ''
+      nix flake init --template "https://flakehub.com/f/the-nix-way/dev-templates/*#rust"
+    '')
+
     (pkgs.writeShellScriptBin "fetchsha" ''
       nix-prefetch-github-latest-release --meta -v $1 $2
     '')

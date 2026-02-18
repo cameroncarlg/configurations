@@ -229,7 +229,7 @@
     };
   };
 
-  services.mullvad-vpn.enable = true;
+  services.mullvad-vpn.enable = false;
 
   services.actual = {
     enable = true;
@@ -245,6 +245,8 @@
 
   services.tailscale = {
     enable = true;
+    openFirewall = true;
+    useRoutingFeatures = "server";
   };
 
   #services.jellyseerr = {
@@ -1107,7 +1109,9 @@
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];
-  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 5353 51820 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 5353 51820 41641 ];
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  networking.firewall.checkReversePath = "loose";
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

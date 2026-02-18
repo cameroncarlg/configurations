@@ -99,9 +99,24 @@
       ZDHSV91FBejgf9ELMOwXHaMjqQ+Cf1yLJlt5NQ==
       -----END CERTIFICATE-----
     ''
+    ''
+      -----BEGIN CERTIFICATE-----
+      MIIBozCCAUqgAwIBAgIRAN9K3hY0YiYaTDWGHixBgTcwCgYIKoZIzj0EAwIwMDEu
+      MCwGA1UEAxMlQ2FkZHkgTG9jYWwgQXV0aG9yaXR5IC0gMjAyNSBFQ0MgUm9vdDAe
+      Fw0yNTA1MDgwMzMzNTFaFw0zNTAzMTcwMzMzNTFaMDAxLjAsBgNVBAMTJUNhZGR5
+      IExvY2FsIEF1dGhvcml0eSAtIDIwMjUgRUNDIFJvb3QwWTATBgcqhkjOPQIBBggq
+      hkjOPQMBBwNCAARWxUzBbeufQRmXHHy2/6gy7RIMFQ/cXNh816oLfme6NR0RTIIo
+      xUCLFJou4ovNJXPLN9z8PW9hnAG780E8L9j4o0UwQzAOBgNVHQ8BAf8EBAMCAQYw
+      EgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4EFgQUhGhCf8cUfxxIqeduz26vF2/7
+      B4swCgYIKoZIzj0EAwIDRwAwRAIgfnjfXv6GDZRXBZ6hvrxX7b6W55hgnqc4bl++
+      tpiPfRkCIFZHw8YOWc3y7xv1exxl005bCvd0XkxZiSmWDyB7AQrH
+      -----END CERTIFICATE-----
+    ''
   ];
 
-  security.pki.certificateFiles = [ config.environment.etc."client_ca.pem".source ];
+  security.pki.certificateFiles = [
+    config.environment.etc."client_ca.pem".source
+  ];
 
   environment.etc."client_ca.pem" = {
     text = ''
@@ -228,9 +243,9 @@
     user = "cameron";
   };
 
-  ##services.tailscale = {
-  ##  enable = true;
-  #};
+  services.tailscale = {
+    enable = true;
+  };
 
   #services.jellyseerr = {
   #  enable = true;
@@ -1005,6 +1020,7 @@
 
   # Install firefox.
   programs.firefox.enable = true;
+  programs.firefox.policies.Certificates.ImportEnterpriseRoots = true;
 
   # Install fish.
   programs.fish.enable = true;
@@ -1044,7 +1060,7 @@
     nginx
     qbittorrent-enhanced
     #claude-code
-    #tailscale
+    tailscale
     #python3
     aichat
     remmina
@@ -1087,7 +1103,7 @@
   services.openssh.enable = true;
 
   # Enable Docker
-  virtualisation.docker.enable = true;
+  #virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];

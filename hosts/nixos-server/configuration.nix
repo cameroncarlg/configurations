@@ -141,7 +141,7 @@
   #  mode = "0644";
   #};
  
-  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.15'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.38'';
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
@@ -188,6 +188,7 @@
         minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
       };
       # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+      #server_names = [ "google" ];
       server_names = [ "cloudflare" ];
       #static = {
       #  "mealie.home" = {
@@ -227,9 +228,9 @@
     user = "cameron";
   };
 
-  services.tailscale = {
-    enable = true;
-  };
+  ##services.tailscale = {
+  ##  enable = true;
+  #};
 
   #services.jellyseerr = {
   #  enable = true;
@@ -284,12 +285,12 @@
     };
   };
 
-  services.silverbullet = {
-    enable = true;
-    openFirewall = true;
-    user = "cameron";
-    envFile = "/etc/silverbullet.env";
-  };
+  #services.silverbullet = {
+  #  enable = true;
+  #  openFirewall = true;
+  #  user = "cameron";
+  #  envFile = "/etc/silverbullet.env";
+  #};
 
   #services.headscale = {
   #  enable = true;
@@ -1042,7 +1043,8 @@
     mullvad-vpn
     nginx
     qbittorrent-enhanced
-    tailscale
+    #claude-code
+    #tailscale
     #python3
     aichat
     remmina
@@ -1085,7 +1087,7 @@
   services.openssh.enable = true;
 
   # Enable Docker
-  #virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];

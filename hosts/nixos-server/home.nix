@@ -59,6 +59,7 @@
     openssl
     dig
     yazi
+    nodejs
     #gemini-cli
     #nmap
     #nerdfonts # NerdFonts

@@ -411,12 +411,12 @@
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
-  #services.ollama = {
-  #  enable = true;
-  #  port = 11434;
-  #  acceleration = "rocm";
-  #  openFirewall = true;
-  #};
+  services.ollama = {
+    enable = true;
+    port = 11434;
+    #acceleration = "rocm";
+    openFirewall = true;
+  };
 
   services.searx = {
     enable = true;
@@ -590,7 +590,7 @@
           reverse_proxy localhost:2283
         '';
       };
-      "open.mynixoshome.io" = {
+      "open-webui.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -634,17 +634,17 @@
           reverse_proxy localhost:8384
         '';
       };
-      #"uptime-kuma.mynixoshome.io" = {
-      #  extraConfig = ''
-      #    tls internal {
-      #      client_auth {
-      #        mode require_and_verify
-      #        trust_pool file /etc/client_ca.pem
-      #      }
-      #    }
-      #    reverse_proxy localhost:4000
-      #  '';
-      #};
+      "uptime-kuma.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:4000
+        '';
+      };
       "vikunja.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
@@ -843,18 +843,18 @@
               href = "https://actual.mynixoshome.io";
             };
           }
-          #{
-          #  "Uptime-kuma" = {
-          #    description = "A fancy self-hosted monitoring tool";
-          #    href = "https://uptime-mynixoshome.io.home";
-          #  };
-          #}
-          #{
-          #  "Open-webui" = {
-          #    description = "Chat UI for Self Hosted LLMs";
-          #    href = "https://open.mynixoshome.io";
-          #  };
-          #}
+          {
+            "Uptime-kuma" = {
+              description = "A fancy self-hosted monitoring tool";
+              href = "https://uptime-kuma.mynixoshome.io";
+            };
+          }
+          {
+            "Open-webui" = {
+              description = "Chat UI for Self Hosted LLMs";
+              href = "https://open-webui.mynixoshome.io";
+            };
+          }
           {
             "Paperless-ngx" = {
               description = "Community-supported supercharged document management system: scan, index and archive all your documents";
@@ -903,13 +903,13 @@
           }
           {
             "Qbit" = {
-              description = "Automation GUI for Self Hosted LLMs";
+              description = "qBittorrent Enhanced Edition. More powerful. 🤷";
               href = "https://qbit.mynixoshome.io";
             };
           }
           {
             "File Server" = {
-              description = "Filer server for files between linux and windows";
+              description = "Filer server for files between linux, windows, and phone.";
               href = "https://files.mynixoshome.io";
             };
           }
@@ -918,11 +918,11 @@
     ];
   };
 
-  #services.open-webui = {
-  #  enable = true;
-  #  openFirewall = false;
-  #  port = 8083;
-  #};
+  services.open-webui = {
+    enable = true;
+    #openFirewall = true;
+    port = 8083;
+  };
 
   #services.n8n = {
   #  enable = true;
@@ -933,18 +933,13 @@
   #  enable = true;
   #};
 
-  #services.uptime-kuma = {
-  #  enable = true;
-  #  settings = {
-  #    #NODE_EXTRA_CA_CERTS = {
-  #    #  _type = "literalExpression";
-
-  #    #  #text = "config.security.pki.caBundle";
-  #    #  text = "etc/ssl";
-  #    #};
-  #    PORT = "4000";
-  #  };
-  #};
+  services.uptime-kuma = {
+    enable = true;
+    settings = {
+      NODE_EXTRA_CA_CERTS = "/etc/pki/tls/certs/ca-bundle.crt";
+      PORT = "4000";
+    };
+  };
 
   services.vikunja = {
     enable = true;
@@ -1056,6 +1051,7 @@
     git
     neovim
     brave
+    ncdu
     gnome-tweaks
     mullvad
     mullvad-vpn
@@ -1088,7 +1084,7 @@
     #firefly-iii
     #navidrome
     #fosrl-pangolin
-    #rocmPackages.rocm
+    rocmPackages.rocminfo
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -1108,8 +1104,8 @@
   #virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 ];
-  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8083 8945 3001 4000 3456 8384 8081 25565 6806 5353 51820 41641 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8191 53 28981 43000 8945 3001 4000 3456 8384 8081 25565 6806 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 8191 53 28981 43000 8945 3001 4000 3456 8384 8081 25565 6806 5353 51820 41641 ];
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
   networking.firewall.checkReversePath = "loose";
   # Or disable the firewall altogether.

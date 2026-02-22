@@ -350,35 +350,35 @@
   #  };
   #};
 
-  #services.minecraft-server = {
-  #  enable = true;
-  #  eula = true;
-  #  openFirewall = true; # Opens the port the server is running on (by default 25565 but in this case 43000)
-  #  declarative = true;
-  #  #whitelist = {
-  #  #  # This is a mapping from Minecraft usernames to UUIDs. You can use https://mcuuid.net/ to get a Minecraft UUID for a username
-  #  #  #username1  = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2"; #czzzAR
-  #  #  # username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
-  #  #};
-  #  serverProperties = {
-  #    level-name = "test";
-  #    player-idle-timeout = 5;
-  #    allow-flight = false;
-  #    server-port = 43000;
-  #    difficulty = 3;
-  #    gamemode = 0;
-  #    pvp = true;
-  #    max-players = 5;
-  #    motd = "Mother Fucking Minecraft Self Hosted Server";
-  #    # white-list = true;
-  #    allow-cheats = false;
-  #    #resource-pack = "http://resourcepack.local/dramatic_skys.zip";
-  #    #resource-pack-id = "b7bed5d1-d396-47ba-9974-c90784a4e123";
-  #    #resource-pack-sha1 = "7dc1a5857421a201ad27c356946927ec921ed896";
-  #    #resource-pack-prompt = "test!";
-  #  };
-  #  # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
-  #};
+  services.minecraft-server = {
+    enable = true;
+    eula = true;
+    openFirewall = true; # Opens the port the server is running on (by default 25565 but in this case 43000)
+    declarative = true;
+    #whitelist = {
+    #  # This is a mapping from Minecraft usernames to UUIDs. You can use https://mcuuid.net/ to get a Minecraft UUID for a username
+    #  #username1  = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2"; #czzzAR
+    #  # username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
+    #};
+    serverProperties = {
+      level-name = "test";
+      player-idle-timeout = 5;
+      allow-flight = false;
+      server-port = 43000;
+      difficulty = 3;
+      gamemode = 0;
+      pvp = true;
+      max-players = 5;
+      motd = "Mother Fucking Minecraft Self Hosted Server";
+      # white-list = true;
+      allow-cheats = false;
+      #resource-pack = "http://resourcepack.local/dramatic_skys.zip";
+      #resource-pack-id = "b7bed5d1-d396-47ba-9974-c90784a4e123";
+      #resource-pack-sha1 = "7dc1a5857421a201ad27c356946927ec921ed896";
+      #resource-pack-prompt = "test!";
+    };
+    # jvmOpts = "-Xms4092M -Xmx4092M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -Xmx2048M -Xms2048M -Djava.net.preferIPv4Stack=true";
+  };
 
   services.syncthing = {
     enable = true;

@@ -302,12 +302,15 @@
     };
   };
 
-  #services.silverbullet = {
-  #  enable = true;
-  #  openFirewall = true;
-  #  user = "cameron";
-  #  envFile = "/etc/silverbullet.env";
-  #};
+  services.shiori = {
+    enable = true;
+  };
+
+  services.silverbullet = {
+    enable = true;
+    openFirewall = true;
+    #envFile = "/etc/silverbullet.env";
+  };
 
   #services.headscale = {
   #  enable = true;
@@ -667,7 +670,7 @@
           reverse_proxy localhost:8081
         '';
       };
-      "silver.mynixoshome.io" = {
+      "silverbullet.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -700,6 +703,17 @@
           reverse_proxy localhost:8084
         '';
       };
+      "shiori.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8080
+        '';
+      };
       "gitlab.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
@@ -723,17 +737,17 @@
           file_server browse
         '';
       };
-      "headscale.mynixoshome.io" = {
-        extraConfig = ''
-          tls internal {
-            client_auth {
-              mode require_and_verify
-              trust_pool file /etc/client_ca.pem
-            }
-          }
-          reverse_proxy localhost:8080
-        '';
-      };
+      #"headscale.mynixoshome.io" = {
+      #  extraConfig = ''
+      #    tls internal {
+      #      client_auth {
+      #        mode require_and_verify
+      #        trust_pool file /etc/client_ca.pem
+      #      }
+      #    }
+      #    reverse_proxy localhost:8080
+      #  '';
+      #};
     };
   };
 
@@ -804,6 +818,18 @@
             };
           }
           {
+            "Shiori" = {
+              description = "Simple bookmark manager built with Go";
+              href = "https://shiori.mynixoshome.io";
+            };
+          }
+          {
+            "Silverbullet" = {
+              description = "An open source personal productivity platform built on Markdown, turbo charged with the scripting power of Lua";
+              href = "https://silverbullet.mynixoshome.io";
+            };
+          }
+          {
             "Immich" = {
               description = "High performance self-hosted photo and video management solution";
               href = "https://immich.mynixoshome.io";
@@ -844,12 +870,6 @@
             };
           }
           {
-            "Uptime-kuma" = {
-              description = "A fancy self-hosted monitoring tool";
-              href = "https://uptime-kuma.mynixoshome.io";
-            };
-          }
-          {
             "Open-webui" = {
               description = "Chat UI for Self Hosted LLMs";
               href = "https://open-webui.mynixoshome.io";
@@ -883,12 +903,12 @@
               href = "https://github.com/cameroncarlg";
             };
           }
-          #{
-          #  "ntfy" = {
-          #    description = "Automated multi-push notification system";
-          #    href = "https://ntfy.mynixoshome.io";
-          #  };
-          #}
+          {
+            "ntfy" = {
+              description = "Automated multi-push notification system";
+              href = "https://ntfy.mynixoshome.io";
+            };
+          }
           #{
           #  "n8n" = {
           #    description = "Automation GUI for Self Hosted LLMs";
@@ -902,14 +922,20 @@
             };
           }
           {
+            "Uptime-kuma" = {
+              description = "A fancy self-hosted monitoring tool";
+              href = "https://uptime-kuma.mynixoshome.io";
+            };
+          }
+          {
             "Qbit" = {
-              description = "qBittorrent Enhanced Edition. More powerful. 🤷";
+              description = "qBittorrent Enhanced Edition. More powerful 🤷";
               href = "https://qbit.mynixoshome.io";
             };
           }
           {
             "File Server" = {
-              description = "Filer server for files between linux, windows, and phone.";
+              description = "Filer server for files between linux, windows, and phone";
               href = "https://files.mynixoshome.io";
             };
           }
@@ -947,14 +973,14 @@
     frontendHostname = "vikunja";
   };
 
-  #services.ntfy-sh = {
-  #  enable = true;
-  #  settings = {
-  #    listen-http = ":8081";
-  #    behind-proxy = true;
-  #    base-url = "https://ntfy.mynixoshome.io";
-  #  };
-  #};
+  services.ntfy-sh = {
+    enable = true;
+    settings = {
+      listen-http = ":8081";
+      behind-proxy = true;
+      base-url = "https://ntfy.mynixoshome.io";
+    };
+  };
 
   #services.qbittorrent = {
   #  enable = true;

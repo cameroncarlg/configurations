@@ -9,6 +9,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     helix.url = "github:/helix-editor/helix/master";
     wezterm.url = "github:wezterm/wezterm?dir=nix";
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {

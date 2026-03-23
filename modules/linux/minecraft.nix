@@ -1,5 +1,13 @@
 { inputs, pkgs, ... }:
 
+let
+  inherit (inputs.nix-minecraft.lib) collectFilesAt;
+  modpack = pkgs.fetchPackwizModpack {
+    url = "https://raw.githubusercontent.com/cameroncarlg/packwiz_modpacks/refs/heads/main/cobblemon2/pack.toml";
+    packHash = "sha256-K68edzT4VvMLA6IrJBQLWu2h7BYqa54yJOYwJJsyp5E=";
+  };
+in
+
 {
   imports =
     [
@@ -11,16 +19,24 @@
     services.minecraft-servers = {
     enable = true;
     eula = true;
-    #openFirewall = true;
+    openFirewall = true;
     servers.fabric = {
       enable = true;
       serverProperties = {
         server-port = 43000;
-        motd = "gyms added?";
+        motd = "friday fried day";
         admin-slot = true;
         public = true;
+        gamemode = 1;
         allow-cheats = true;
-        gamemode = "creative";
+        broadcast-rcon-to-ops = true;
+        enable-rcon = true;
+        "rcon.password" = "hunter2";
+      };
+      operators = {
+        rogue252 = "8602fe48-c10f-45ae-8727-274d7119bce0";
+        scarmor = "d8289008-4bc5-4b3b-a90b-375ae719f2d2";
+        czzzAR = "2e73072d-c5ef-4ae3-9d1b-d28166cda3c2";
       };
 
       # Specify the custom minecraft server package
@@ -30,17 +46,35 @@
         loaderVersion = "0.18.4";
       }; # Specific fabric loader version
 
-      symlinks =
-      let
-        modpack = (pkgs.fetchPackwizModpack {
-          #url = "https://raw.githubusercontent.com/cameroncarlg/packwiz_modpacks/refs/heads/main/modrinth_cobblemon/pack.toml";
-          #packHash = "sha256-K68edzT4VvMLA6IrJBQLWu2h7BYqa54yJOYwJJsyp5E=";
-          url = "https://raw.githubusercontent.com/cameroncarlg/packwiz_modpacks/refs/heads/main/cobblemon2/pack.toml";
-          packHash = "sha256-K68edzT4VvMLA6IrJBQLWu2h7BYqa54yJOYwJJsyp5E=";
-        });
-      in
+      symlinks = collectFilesAt modpack "mods" //
+      #let
+      #  modpack = (pkgs.fetchPackwizModpack {
+      #    #url = "https://raw.githubusercontent.com/cameroncarlg/packwiz_modpacks/refs/heads/main/modrinth_cobblemon/pack.toml";
+      #    #packHash = "sha256-K68edzT4VvMLA6IrJBQLWu2h7BYqa54yJOYwJJsyp5E=";
+      #    url = "https://raw.githubusercontent.com/cameroncarlg/packwiz_modpacks/refs/heads/main/cobblemon2/pack.toml";
+      #    packHash = "sha256-K68edzT4VvMLA6IrJBQLWu2h7BYqa54yJOYwJJsyp5E=";
+      #  });
+      #in
       {
-        "mods" = "${modpack}/mods";
+        "mods/rad-gyms-fabric.jar" = pkgs.fetchurl {
+          #pname = "asdf";
+          #version = "0.17.7";
+          url = "https://cdn.modrinth.com/data/lRwTUnD7/versions/8qqQxnjW/rctmod-fabric-1.21.1-0.17.7-beta.jar";
+          hash = "sha256-ldk5jY/JbDdgIoKkj7bjylarvtQ5pC2TVl4asqayUv4=";
+        };
+        "mods/rctapi-fabric.jar" = pkgs.fetchurl {
+          #pname = "asdf";
+          #version = "0.17.7";
+          url = "https://cdn.modrinth.com/data/CBfM2yw7/versions/C4VTuik1/rctapi-fabric-1.21.1-0.14.8-beta.jar";
+          hash = "sha256-Gwjc0R+8/Rz3hrnaBQRYQ41SA/b8+ersH8lTcummt44=";
+        };
+        "mods/forge-config-api-port.jar" = pkgs.fetchurl {
+          #pname = "asdf";
+          #version = "0.17.7";
+          url = "https://cdn.modrinth.com/data/ohNO6lps/versions/N5qzq0XV/ForgeConfigAPIPort-v21.1.6-1.21.1-Fabric.jar";
+          hash = "sha256-LjqPDjvahafXInIOfOh5y9nQKNk5XG/CJNMps8mC2bE=";
+        };
+        #"mods" = "${modpack}/mods";
         #mods = pkgs.linkFarmFromDrvs "mods" (
         #  builtins.attrValues {
         #    Fabric-API = pkgs.fetchurl {

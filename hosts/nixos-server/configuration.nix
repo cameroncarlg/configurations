@@ -1176,6 +1176,7 @@
     #minecraft
     minecraft-server
     #inputs.helix.packages."${pkgs.system}".helix
+    wezterm
 
     # Homelab 
     #home-assistant

@@ -1132,6 +1132,11 @@
     "steam-run"
   ];
 
+  programs.mosh = {
+    enable = true;
+    openFirewall = true;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

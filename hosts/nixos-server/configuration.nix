@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       #inputs.nix-minecraft.nixosModules.minecraft-servers
       ../../modules/linux/minecraft.nix
+      ../../modules/linux/discord-bot.nix
     ];
 
   #nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];

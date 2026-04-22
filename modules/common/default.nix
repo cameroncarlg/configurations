@@ -6,5 +6,6 @@
     ./lazygit.nix
     ./git.nix
     ./helix.nix
+    ./pi-agent.nix
   ];
 }

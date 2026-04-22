@@ -2,66 +2,109 @@
 
 # Global AGENTS.md for the `pi` coding agent.
 #
-# Pi loads this file for every session (not just when launched from ~).
-# The original ~/AGENTS.md was written assuming cwd == ~, so a couple of
-# lines ("You were launched from ~") are now a lie when pi is started
-# elsewhere. Adjust if that bothers you.
+# This file is loaded for EVERY pi session, in addition to any AGENTS.md
+# files found walking up from cwd and in cwd itself. Keep it generic:
+# environment, tooling, and behavioral defaults that apply everywhere.
+# Project- and directory-specific rules belong in per-project AGENTS.md.
 #
-# Pi search order (all matches are concatenated):
-#   - ~/.pi/agent/AGENTS.md            <- this file
-#   - every parent dir of cwd up to /
-#   - cwd/AGENTS.md
-# Project-level AGENTS.md files override/extend this one.
+# Pi context-file load order (all concatenated):
+#   1. ~/.pi/agent/AGENTS.md           <- this file (managed by home-manager)
+#   2. every parent dir of cwd, walking up
+#   3. cwd/AGENTS.md
 
 {
   home.file.".pi/agent/AGENTS.md".text = ''
-    # Home Directory — Conversational Mode
+    # Global Agent Context
 
-    You were launched from `~` (Cameron's home directory). This is **not** a code
-    project. Treat this session as a conversation, not a coding task.
+    Always-on context for Cameron's environment. Per-project `AGENTS.md` files
+    override or extend anything here — trust them over this file when they
+    conflict.
 
-    ## How to behave here
+    ## Operator
 
-    - Default to **chat**, not action. Ask before doing.
-    - Do **not** scan, grep, or `ls` the home tree looking for context unless I
-      explicitly ask. My home dir is personal — respect it.
-    - Do **not** create, edit, or move files in `~` on your own initiative. If a
-      task needs a file, confirm the path with me first.
-    - Keep answers short and direct. No preamble, no "Great question!", no
-      recap of what I just said.
-    - If I ask a factual or conceptual question, just answer it. Don't reach for
-      tools unless the answer actually requires them.
-    - Thinking out loud is fine; long structured plans for trivial chats are not.
+    - User: Cameron. Solo operator, no team conventions to satisfy.
+    - Prefers short, direct answers. No preamble, no recap, no "Great question!".
+    - Thinking out loud is fine; padded plans for trivial tasks are not.
+    - Ask before doing anything destructive or anything that touches files
+      outside the current working tree.
 
-    ## When I *do* want work done
+    ## Environment
 
-    I'll usually say so explicitly ("help me fix…", "write a script that…",
-    "edit ~/scripts/…"). In that case:
+    - OS: NixOS (x86_64-linux server) and macOS (aarch64-darwin laptop), both
+      managed from `~/configurations` (a single flake with nix-darwin +
+      home-manager).
+    - Shell: fish (interactive). Scripts are typically `bash` or `nushell`.
+    - Editor: helix (`hx`). Terminal: wezterm. Pager: whatever fish defaults to.
+    - Package manager: **nix**. Prefer `nix run nixpkgs#<pkg>` or adding to
+      the flake over `npm i -g`, `pip install --user`, `brew install`, etc.
+      If a tool is missing, suggest the nix way first.
+    - Git is available everywhere. `lazygit`, `fzf`, `ripgrep` (`rg`), `fd`,
+      `bat`, `eza` are installed and preferred over their classic equivalents.
 
-    - `cd` into the relevant subdirectory first (or work with absolute paths
-      scoped to it) so you're not poking around the whole home tree.
-    - Many subdirs are their own projects with their own `AGENTS.md` /
-      conventions — prefer those over anything in this file.
+    ## Tool preferences
 
-    ## Layout cheat sheet (for when it's relevant)
+    - **Search files**: `rg` over `grep -r`. `fd` over `find`.
+    - **List files**: `ls` (or `eza` if the tree is large). Avoid recursive
+      `ls -R` — use `fd` or `rg --files` instead.
+    - **Read files**: use the `read` tool, not `cat`/`head`/`sed`.
+    - **Edit files**: use the `edit` tool for targeted changes; `write` only
+      for new files or full rewrites.
+    - **Run stuff**: `bash` tool. Don't background long-running processes
+      without being asked.
 
-    - `~/configurations` — NixOS flake (hosts, modules). Main system config.
-    - `~/scripts/nix`, `~/scripts/nu` — personal shell/nushell scripts.
-    - `~/notes` — personal notes and credentials-adjacent material. **Do not
-      read files here unless I point you at a specific one.**
-    - `~/projects`, `~/rust`, `~/learning_rust`, `~/cloud-resume-website`,
-      `~/gleem`, `~/barotruama`, `~/cooking` — individual projects.
-    - `~/ssl`, `~/wireguard-keys` — secrets. Never read, never cat, never diff.
-    - `~/.pi/agent` — my pi config (skills, prompts, settings).
+    ## Skills
 
-    ## Hard rules
+    Installed skills live under `~/.pi/agent/skills/`, one directory per
+    package (e.g. `~/.pi/agent/skills/pi-skills/<skill-name>/SKILL.md`).
+    The startup header and the `<available_skills>` block in the system
+    prompt list what's currently loaded with a one-line description each.
 
-    - Never read anything under `~/ssl`, `~/wireguard-keys`, or files matching
-      `*key*`, `*.pem`, `*.p12`, `.env*` without an explicit instruction naming
-      the exact file.
-    - Never run destructive commands (`rm`, `mv` over existing files, `git
-      reset --hard`, `git clean`, `chmod -R`, etc.) from this directory.
-    - Don't `git` anything in `~` itself — it's not a repo and shouldn't become
-      one.
+    Rules of thumb:
+
+    - **Discover before assuming.** If you're unsure whether a skill exists
+      for a task, `ls ~/.pi/agent/skills/*/` or check the system prompt's
+      `<available_skills>` list — don't guess from memory, the set changes.
+    - **Read the contract before use.** A skill's description in the system
+      prompt is a summary. Before invoking one, `read` its `SKILL.md` so you
+      know its actual inputs, flags, and failure modes.
+    - **Prefer a skill over reinventing.** If a skill covers the task (web
+      search, calendar, email, transcription, browser automation, etc.),
+      use it instead of hand-rolling curl/API calls.
+    - **Skills are lazy.** They cost nothing until invoked, so their
+      presence in the list is not a suggestion to use them — only reach for
+      one when the task actually matches.
+
+    ## Safety defaults
+
+    - Never read files matching `*key*`, `*.pem`, `*.p12`, `*.kdbx`, `.env*`,
+      `id_rsa*`, `id_ed25519*`, or anything under `~/ssl`, `~/wireguard-keys`,
+      `~/.ssh`, `~/.gnupg` unless I name the exact file.
+    - Never run: `rm -rf` on anything outside the current project, `git push
+      --force`, `git reset --hard` on a shared branch, `chmod -R`, `chown -R`,
+      `sudo` commands I didn't ask for.
+    - Never commit or push on my behalf unless I explicitly say "commit" /
+      "push". Staging (`git add`) for review is fine.
+    - Never write to `/etc`, `/nix`, `/boot`, or anywhere outside `$HOME`
+      without being asked.
+    - If a command would take >30s or produce huge output, say so first and
+      ask whether to proceed.
+
+    ## Nix specifics (since most work touches nix)
+
+    - Flake lives at `~/configurations`. See its `AGENTS.md` for structure,
+      rebuild commands, and conventions.
+    - Prefer `nix flake check --no-build` before suggesting a rebuild — it's
+      the cheapest eval-time sanity check.
+    - Don't suggest `nix-env -i` / `nix-channel` — this system is flake-only
+      with home-manager.
+    - On macOS, Determinate Systems manages the Nix daemon (`nix.enable =
+      false` in the darwin config is intentional).
+
+    ## When unsure
+
+    - Ask one clarifying question rather than guessing across multiple
+      branches of possibility.
+    - If a project has its own `AGENTS.md`, defer to it. If it contradicts
+      this file, the project wins.
   '';
 }

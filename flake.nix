@@ -10,6 +10,7 @@
     helix.url = "github:/helix-editor/helix/master";
     wezterm.url = "github:wezterm/wezterm?dir=nix";
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {

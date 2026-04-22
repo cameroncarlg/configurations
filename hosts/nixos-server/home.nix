@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -66,6 +66,7 @@
     #neofetch
     #traceroute
     # broot # Terminal File System navigator
+    inputs.llm-agents.packages.${pkgs.system}.pi # pi-coding-agent
 
   #  # Broken
 

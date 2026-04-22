@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -65,6 +65,7 @@
     openssl
     glow
     markdown-oxide
+    inputs.llm-agents.packages.${pkgs.system}.pi # pi-coding-agent
 
     # Broken
 

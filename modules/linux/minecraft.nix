@@ -24,7 +24,7 @@ in
       enable = true;
       serverProperties = {
         server-port = 43000;
-        motd = "friday fried day";
+        motd = "white ass niggas going hard af";
         admin-slot = true;
         public = true;
         gamemode = 1;
@@ -63,16 +63,32 @@ in
           hash = "sha256-ldk5jY/JbDdgIoKkj7bjylarvtQ5pC2TVl4asqayUv4=";
         };
         "mods/rctapi-fabric.jar" = pkgs.fetchurl {
-          #pname = "asdf";
-          #version = "0.17.7";
           url = "https://cdn.modrinth.com/data/CBfM2yw7/versions/C4VTuik1/rctapi-fabric-1.21.1-0.14.8-beta.jar";
           hash = "sha256-Gwjc0R+8/Rz3hrnaBQRYQ41SA/b8+ersH8lTcummt44=";
         };
         "mods/forge-config-api-port.jar" = pkgs.fetchurl {
-          #pname = "asdf";
-          #version = "0.17.7";
           url = "https://cdn.modrinth.com/data/ohNO6lps/versions/N5qzq0XV/ForgeConfigAPIPort-v21.1.6-1.21.1-Fabric.jar";
           hash = "sha256-LjqPDjvahafXInIOfOh5y9nQKNk5XG/CJNMps8mC2bE=";
+        };
+        "mods/tide2.jar" = pkgs.fetchurl {
+          url = "https://cdn.modrinth.com/data/die1AF7i/versions/jSHnEpEZ/tide-fabric-1.21.1-2.0.3.jar";
+          hash = "sha256-HBN2uLvuKD+p8DiSQEqEfuQ/kYNWQND18uxbIfuvkTE=";
+        };
+        "mods/cloth-config-api.jar" = pkgs.fetchurl {
+          url = "https://cdn.modrinth.com/data/9s6osm5g/versions/HpMb5wGb/cloth-config-15.0.140-fabric.jar";
+          hash = "sha256-M4lOldo69ZAUs50SZYbVJB4H6jn4YYdj4w2rY3QF+V8=";
+        };
+        "mods/myths-and-legends.jar" = pkgs.fetchurl {
+          url = "https://cdn.modrinth.com/data/CaOWby9K/versions/eg83qtSQ/MythsAndLegends-fabric-1.9.0.jar";
+          hash = "sha256-w68SK/rSxJT79FUIDRgD3Ri2TueL/QyO46+/Hl3gdAQ=";
+        };
+        "mods/simple-tms.jar" = pkgs.fetchurl {
+          url = "https://cdn.modrinth.com/data/yFqR0DNc/versions/uWiIETYV/SimpleTMs-fabric-2.3.3.jar";
+          hash = "sha256-xbqgf0BUM/YiGPw5FjYNTNo3VY0B1JPfemGKx9eNIsE=";
+        };
+        "mods/tide2-extra.jar" = pkgs.fetchurl {
+          url = "https://cdn.modrinth.com/data/goMfyYSL/versions/7b7TofV4/tide-extra-compatibility-2.1.1.jar";
+          hash = "sha256-zJzSDogcmfrfG191lM0kRJaXq2tw8tq8QKWbW5ElA8I=";
         };
         #"mods" = "${modpack}/mods";
         #mods = pkgs.linkFarmFromDrvs "mods" (

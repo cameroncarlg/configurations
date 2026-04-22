@@ -229,7 +229,7 @@
     };
   };
 
-  services.mullvad-vpn.enable = false;
+  services.mullvad-vpn.enable = true;
 
   services.actual = {
     enable = true;
@@ -464,22 +464,22 @@
   #  description = "Nixos hosted factorio server";
   #};
 
-  #services.gitlab = {
-  #  enable = true;
-  #  #port = 443;
-  #  #https = true;
-  #  databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
-  #  initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
-  #  secrets = {
-  #    secretFile = pkgs.writeText "secret" "Aig5zaic";
-  #    otpFile = pkgs.writeText "otpsecret" "Riew9mue";
-  #    dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
-  #    jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
-  #    activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-  #    activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-  #    activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-  #  };
-  #};
+  services.gitlab = {
+    enable = true;
+    #port = 443;
+    #https = true;
+    databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
+    initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
+    secrets = {
+      secretFile = pkgs.writeText "secret" "Aig5zaic";
+      otpFile = pkgs.writeText "otpsecret" "Riew9mue";
+      dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
+      jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
+      activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+      activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+      activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+    };
+  };
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
@@ -960,12 +960,12 @@
       }
       {
         "CICD Automation" = [
-          #{
-          #  "GitLab" = {
-          #    description = "Self hosted GitLab server; code repository and cicd experiments";
-          #    href = "https://gitlab.mynixoshome.io";
-          #  };
-          #}
+          {
+            "GitLab" = {
+              description = "Self hosted GitLab server; code repository and cicd experiments";
+              href = "https://gitlab.mynixoshome.io";
+            };
+          }
           {
             "Github" = {
               description = "Link to personal github repo";

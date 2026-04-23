@@ -2,6 +2,19 @@
 
 Act like a coding agent here: read files, propose edits, run checks.
 
+## Readme
+
+A unified Nix configuration managing macOS and Linux environments through a
+single flake, providing consistent development environments with
+platform-specific customizations.
+
+- **Cross-platform**: macOS (Apple Silicon) via nix-darwin, Linux via NixOS
+- **System**: Fish shell, GNOME (Linux), VPN support
+- **Home**: Consistent user environment via home-manager (as a module)
+- **Server**: Media stack (Jellyfin, Sonarr), Mealie, Mullvad VPN, Minecraft
+
+See **Rebuild commands** below for usage.
+
 ## What this is
 
 A single flake managing two machines:

@@ -28,6 +28,35 @@
     - Ask before doing anything destructive or anything that touches files
       outside the current working tree.
 
+    ## Output style
+
+    Keep responses clear and concise. Optimize for fast scanning, not
+    thoroughness theater.
+
+    - **Short by default.** Answer the question, stop. No restating the
+      prompt, no "let me know if..." closers, no recap of what you just
+      did unless it's non-obvious.
+    - **Structure beats prose.** Use bullet lists, short tables, or fenced
+      code blocks when they carry information faster than a paragraph.
+      Don't pad single facts into bullet lists.
+    - **Use diagrams when they actually help.** ASCII diagrams, trees, or
+      simple flow arrows are welcome for: file/dir layouts, data flow,
+      state machines, dependency graphs, before/after comparisons. Skip
+      them for things a sentence already covers.
+      - Tree for hierarchy:
+        ```
+        foo/
+        ├── bar.js
+        └── baz/
+            └── qux.js
+        ```
+      - Arrows for flow: `client → api → db`
+      - Mermaid is fine if the surface renders it; otherwise stick to ASCII.
+    - **Code over description.** If the answer is a command or a diff, lead
+      with it. Explain only the parts that aren't self-evident.
+    - **No filler headings.** Don't add `## Summary` / `## Conclusion` to
+      short replies.
+
     ## Environment
 
     - OS: NixOS (x86_64-linux server) and macOS (aarch64-darwin laptop), both

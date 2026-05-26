@@ -20,7 +20,7 @@
         { key = 'Enter', mods = 'ALT|SHIFT', action = wezterm.action.SplitVertical {domain = 'CurrentPaneDomain' }},
         { key = 's', mods = 'ALT', action = wezterm.action.ActivateTabRelative(-1) },
         { key = 'o', mods = 'ALT', action = wezterm.action.ScrollByLine(-1) },
-        { key = 'i', mods = 'ALT', action = wezterm.action.ScrollToPrompt(-1) },
+        { key = 'i', mods = 'ALT', action = wezterm.action.ScrollByLine(1) },
         { key = 't', mods = 'ALT', action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
         { key = 'w', mods = 'ALT', action = wezterm.action.CloseCurrentPane {confirm = true }},
         { key = 'w', mods = 'ALT|SHIFT', action = wezterm.action.CloseCurrentTab {confirm = true }},

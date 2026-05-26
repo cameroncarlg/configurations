@@ -10,7 +10,7 @@
       ./hardware-configuration.nix
       #inputs.nix-minecraft.nixosModules.minecraft-servers
       ../../modules/linux/minecraft.nix
-      ../../modules/linux/discord-bot.nix
+      ../../modules/linux/lab-bot.nix
     ];
 
   #nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
@@ -157,7 +157,8 @@
   #  mode = "0644";
   #};
  
-  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.38'';
+  #environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.38'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.55'';
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
@@ -1133,10 +1134,10 @@
     "steam-run"
   ];
 
-  #programs.mosh = {
-  #  enable = true;
-  #  openFirewall = true;
-  #};
+  programs.mosh = {
+    enable = true;
+    openFirewall = true;
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

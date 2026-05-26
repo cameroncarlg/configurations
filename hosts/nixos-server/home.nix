@@ -60,6 +60,7 @@
     dig
     yazi
     nodejs
+    tcpdump
     #gemini-cli
     #nmap
     #nerdfonts # NerdFonts

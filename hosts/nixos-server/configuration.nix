@@ -11,6 +11,7 @@
       #inputs.nix-minecraft.nixosModules.minecraft-servers
       ../../modules/linux/minecraft.nix
       ../../modules/linux/lab-bot.nix
+      ../../modules/linux/webhook-receiver.nix
     ];
 
   #nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
@@ -228,6 +229,10 @@
       ALLOW_SIGNUP = "true";
       SECURITY_MAX_LOGIN_ATTEMPTS = 100;
       SECURITY_USER_LOCKOUT_TIME = 1;
+      OPENAI_BASE_URL = "http://localhost:11434/v1";
+      OPENAI_API_KEY = "ollama";
+      OPENAI_MODEL = "llama3.2";
+      OPENAI_ENABLE_IMAGE_SERVICES = "true";
     };
   };
 

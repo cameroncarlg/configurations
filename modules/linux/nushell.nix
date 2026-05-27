@@ -1,6 +1,9 @@
 {
   programs.nushell = {
     enable = true;
+    environmentVariables = {
+      BRAVE_API_KEY = "BSAV966HEQJP-uYVSdpPJELNefoaZpr";
+    };
     shellAliases = {
       sw = "sudo nixos-rebuild switch --flake /home/cameron/configurations";
       hxc = "sudo hx /home/cameron/configurations/hosts/nixos-server/home.nix";

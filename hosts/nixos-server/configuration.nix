@@ -229,9 +229,9 @@
       ALLOW_SIGNUP = "true";
       SECURITY_MAX_LOGIN_ATTEMPTS = 100;
       SECURITY_USER_LOCKOUT_TIME = 1;
-      OPENAI_BASE_URL = "http://localhost:11434/v1";
-      OPENAI_API_KEY = "ollama";
-      OPENAI_MODEL = "deepseek-r1:7b";
+      OPENAI_BASE_URL = "https://api.openai.com/v1";
+      OPENAI_API_KEY = "REDACTED";
+      OPENAI_MODEL = "gpt-4o-mini";
       OPENAI_ENABLE_IMAGE_SERVICES = "true";
     };
   };

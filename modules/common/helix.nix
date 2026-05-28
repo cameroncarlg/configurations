@@ -24,35 +24,35 @@
         {
           name = "html";
           formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            command = "${pkgs.prettier}/bin/prettier";
             args = [ "--stdin-filepath" "{}" "--parser" "html" ];
           };
         }
         {
           name = "css";
           formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            command = "${pkgs.prettier}/bin/prettier";
             args = [ "--stdin-filepath" "{}" "--parser" "css" ];
           };
         }
         {
           name = "javascript";
           formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            command = "${pkgs.prettier}/bin/prettier";
             args = [ "--stdin-filepath" "{}" ];
           };
         }
         {
           name = "typescript";
           formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            command = "${pkgs.prettier}/bin/prettier";
             args = [ "--stdin-filepath" "{}" ];
           };
         }
         {
           name = "jsx";
           formatter = {
-            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            command = "${pkgs.prettier}/bin/prettier";
             args = [ "--stdin-filepath" "{}" "--parser" "jsx" ];
           };
         }
@@ -60,7 +60,7 @@
           name = "tsx";
           auto-format = true;
           # formatter = {
-          #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
+          #   command = "${pkgs.prettier}/bin/prettier";
           #   args = [ "--stdin-filepath" "{}" "--parser" "tsx" ];
           # };
         }
@@ -68,7 +68,7 @@
           name = "json";
           auto-format = true;
           # formatter = {
-          #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
+          #   command = "${pkgs.prettier}/bin/prettier";
           #   args = [ "--stdin-filepath" "{}" "--parser" "json" ];
           # };
         }

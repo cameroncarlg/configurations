@@ -161,4 +161,144 @@
     - If a project has its own `AGENTS.md`, defer to it. If it contradicts
       this file, the project wins.
   '';
+
+  home.file.".pi/agent/skills/pi-skills/vikunja/SKILL.md".text = ''
+    ---
+    name: vikunja
+    description: Vikunja todo app — create, list, and complete tasks. Use when the user wants to add tasks, todos, or reminders to their todo list.
+    ---
+
+    # Vikunja
+
+    Create and manage tasks in Cameron's Vikunja instance.
+
+    ## Usage
+
+    ```bash
+    # Create a task (defaults to TODO project)
+    {baseDir}/task.sh create "Task title"
+
+    # Create with options
+    {baseDir}/task.sh create "Task title" --description "more detail" --due 2026-05-30 --priority 3
+
+    # Create in a specific project
+    {baseDir}/task.sh create "Task title" --project 3
+
+    # List tasks in a project (defaults to TODO)
+    {baseDir}/task.sh list
+    {baseDir}/task.sh list 3
+
+    # Mark a task done
+    {baseDir}/task.sh done 50
+
+    # List all projects with their IDs
+    {baseDir}/task.sh projects
+    ```
+
+    ## Projects
+
+    | ID | Name |
+    |----|------|
+    | 1  | TODO (default inbox) |
+    | 2  | Mapplication |
+    | 3  | Ideas |
+    | 4  | Setup PI |
+    | 5  | Discord Bot |
+
+    ## Priority levels
+
+    0 = none, 1 = low, 2 = medium, 3 = high, 4 = urgent, 5 = DO NOW
+
+    ## When to use
+
+    - User says "add a task", "remind me to", "add to my todo list", "make a note to"
+    - Default to project 1 (TODO) unless the user specifies otherwise
+    - Use --priority 3 or higher when user says "urgent", "important", "don't forget"
+  '';
+
+  home.file.".pi/agent/skills/pi-skills/vikunja/task.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      # Vikunja task CLI
+      set -euo pipefail
+
+      VIKUNJA_URL="http://localhost:3456"
+      VIKUNJA_TOKEN="tk_4e8096dfcb255f263234de2c389afb718ff43e81"
+      DEFAULT_PROJECT=1  # TODO project
+
+      api() {
+        local method="$1"; shift
+        local path="$1"; shift
+        curl -sf -X "$method" \
+          -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+          -H "Content-Type: application/json" \
+          "$VIKUNJA_URL/api/v1$path" "$@"
+      }
+
+      cmd="''${1:-help}"; shift || true
+
+      case "$cmd" in
+        create)
+          title="$1"; shift
+          project="$DEFAULT_PROJECT"
+          description=""
+          due=""
+          priority=0
+          while [[ $# -gt 0 ]]; do
+            case "$1" in
+              --project)     project="$2";      shift 2 ;;
+              --description) description="$2";  shift 2 ;;
+              --due)         due="$2T00:00:00Z"; shift 2 ;;
+              --priority)    priority="$2";     shift 2 ;;
+              *) shift ;;
+            esac
+          done
+          payload=$(printf '{"title":"%s","description":"%s","due_date":"%s","priority":%d}' \
+            "$title" "$description" "$due" "$priority")
+          result=$(api PUT "/projects/$project/tasks" -d "$payload")
+          id=$(echo "$result" | grep -oP '"id":\K\d+' | head -1)
+          echo "Created task #$id: $title"
+          ;;
+
+        done)
+          task_id="$1"
+          api POST "/tasks/$task_id" -d '{"done":true}' > /dev/null
+          echo "Task #$task_id marked as done"
+          ;;
+
+        list)
+          project="''${1:-$DEFAULT_PROJECT}"
+          api GET "/projects/$project/tasks" | \
+            grep -oP '"id":\d+,"title":"[^"]*","description":"[^"]*","done":(true|false)' | \
+            while IFS= read -r line; do
+              id=$(echo "$line" | grep -oP '"id":\K\d+')
+              title=$(echo "$line" | grep -oP '"title":"\K[^"]*')
+              done=$(echo "$line" | grep -oP '"done":\K\w+')
+              status=$( [[ "$done" == "true" ]] && echo "✓" || echo "○" )
+              echo "$status #$id  $title"
+            done
+          ;;
+
+        projects)
+          api GET "/projects" | \
+            grep -oP '"id":\d+,"title":"[^"]*"' | \
+            grep -v '"title":"List"\|"title":"Gantt"\|"title":"Table"\|"title":"Kanban"' | \
+            while IFS= read -r line; do
+              id=$(echo "$line" | grep -oP '"id":\K\d+')
+              title=$(echo "$line" | grep -oP '"title":"\K[^"]*')
+              echo "#$id  $title"
+            done
+          ;;
+
+        *)
+          echo "Usage:"
+          echo "  task.sh create \"title\" [--project <id>] [--description \"...\"] [--due YYYY-MM-DD] [--priority 0-5]"
+          echo "  task.sh list [project_id]"
+          echo "  task.sh done <task_id>"
+          echo "  task.sh projects"
+          ;;
+      esac
+    '';
+  };
 }

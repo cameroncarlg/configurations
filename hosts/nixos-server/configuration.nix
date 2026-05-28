@@ -282,6 +282,7 @@
 
   services.audiobookshelf = {
     enable = true;
+    port = 8001;
     openFirewall = true;
   };
 
@@ -298,6 +299,7 @@
   services.immich = {
     enable = true;
     openFirewall = true;
+    database.enable = true;
   };
 
   environment.etc."paperless-admin-pass".text = "admin";
@@ -622,7 +624,7 @@
               trust_pool file /etc/client_ca.pem
             }
           }
-          reverse_proxy localhost:8000
+          reverse_proxy localhost:8001
         '';
       };
       "paperless.mynixoshome.io" = {

@@ -159,7 +159,7 @@
   #};
  
   #environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.38'';
-  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.55'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 100.91.29.40'';
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
@@ -236,7 +236,7 @@
     };
   };
 
-  services.mullvad-vpn.enable = true;
+  #services.mullvad-vpn.enable = true;
 
   services.actual = {
     enable = true;
@@ -1060,11 +1060,11 @@
     };
   };
 
-  #services.qbittorrent = {
-  #  enable = true;
-  #  webuiPort = "8085";
-  #  openFirewall = true;
-  #};
+  services.qbittorrent = {
+    enable = true;
+    webuiPort = 8085;
+    openFirewall = true;
+  };
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -1162,10 +1162,10 @@
     brave
     ncdu
     gnome-tweaks
-    mullvad
-    mullvad-vpn
     nginx
-    qbittorrent-enhanced
+    #mullvad
+    #mullvad-vpn
+    #qbittorrent-enhanced
     #claude-code
     tailscale
     #python3

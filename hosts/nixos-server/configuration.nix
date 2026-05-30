@@ -159,7 +159,7 @@
   #};
  
   #environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 192.168.0.38'';
-  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.* 100.91.29.40'';
+  environment.etc."dnscrypt-proxy/cloaking-rules.txt".text = ''*.mynixoshome.io 100.91.29.40'';
   # 
   #environment.etc."dnscrypt-proxy/forwarding-rules.txt".text = ''jellyfin.home 192.168.0.18'';
   #
@@ -256,20 +256,22 @@
     useRoutingFeatures = "server";
   };
 
-  #services.jellyseerr = {
-  #  enable = true;
-  #  openFirewall = false;
-  #};
+  services.jellyseerr = {
+    enable = true;
+    openFirewall = false;
+  };
 
-  #services.sonarr = {
-  #  enable = true;
-  #  openFirewall = false;
-  #};
+  services.sonarr = {
+    enable = true;
+    openFirewall = false;
+    user = "cameron";
+    group = "users";
+  };
 
-  #services.prowlarr = {
-  #  enable = true;
-  #  openFirewall = false;
-  #};
+  services.prowlarr = {
+    enable = true;
+    openFirewall = false;
+  };
 
   services.privoxy = {
     enable = true;
@@ -284,6 +286,8 @@
     enable = true;
     port = 8001;
     openFirewall = true;
+    user = "cameron";
+    group = "users";
   };
 
   services.pinchflat = {
@@ -859,24 +863,24 @@
               href = "https://jellyfin.mynixoshome.io";
             };
           }
-          #{
-          #  "Jellyseer" = {
-          #    description = "Open-source media request and discovery manager for Jellyfin";
-          #    href = "https://jellyseer.mynixoshome.io";
-          #  };
-          #}
-          #{
-          #  "Sonarr" = {
-          #    description = "Smart PVR (Personal Video Recorder) for bit users";
-          #    href = "https://sonarr.mynixoshome.io";
-          #  };
-          #}
-          #{
-          #  "Prowlarr" = {
-          #    description = "Index Manager/Proxy built to integrate with PVR apps";
-          #    href = "https://prowlarr.mynixoshome.io";
-          #  };
-          #}
+          {
+            "Jellyseer" = {
+              description = "Open-source media request and discovery manager for Jellyfin";
+              href = "https://jellyseer.mynixoshome.io";
+            };
+          }
+          {
+            "Sonarr" = {
+              description = "Smart PVR (Personal Video Recorder) for bit users";
+              href = "https://sonarr.mynixoshome.io";
+            };
+          }
+          {
+            "Prowlarr" = {
+              description = "Index Manager/Proxy built to integrate with PVR apps";
+              href = "https://prowlarr.mynixoshome.io";
+            };
+          }
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
@@ -1064,6 +1068,8 @@
     enable = true;
     webuiPort = 8085;
     openFirewall = true;
+    user = "cameron";
+    group = "users";
   };
 
   # Enable the GNOME Desktop Environment.
@@ -1186,7 +1192,8 @@
     #inputs.helix.packages."${pkgs.system}".helix
     wezterm
 
-    # Homelab 
+    # Homelab
+    zola
     #home-assistant
     syncthing
     #ntfy-sh

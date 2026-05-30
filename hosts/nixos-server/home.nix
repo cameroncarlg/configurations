@@ -61,6 +61,7 @@
     yazi
     nodejs
     tcpdump
+    glow
     #gemini-cli
     #nmap
     #nerdfonts # NerdFonts

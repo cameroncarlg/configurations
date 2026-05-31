@@ -61,11 +61,11 @@
     openvpn
     nmap
     nil
-    nixfmt-rfc-style
+    nixfmt
     openssl
     glow
     markdown-oxide
-    inputs.llm-agents.packages.${pkgs.system}.pi # pi-coding-agent
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi # pi-coding-agent
 
     # Broken
 

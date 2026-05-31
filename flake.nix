@@ -31,9 +31,9 @@
     
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          { nixpkgs.hostPlatform.system = "x86_64-linux"; }
           ./hosts/nixos-server/configuration.nix
 
           # make home-manager as a module of nixos

@@ -181,7 +181,7 @@
   };
 
   # Encrypted DNS
-  services.dnscrypt-proxy2 = {
+  services.dnscrypt-proxy = {
     enable = true;
     # Settings reference:
     # https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/dnscrypt-proxy/example-dnscrypt-proxy.toml
@@ -256,12 +256,44 @@
     useRoutingFeatures = "server";
   };
 
-  services.jellyseerr = {
+  #services.jellyseerr = {
+  #  enable = true;
+  #  openFirewall = false;
+  #};
+
+  services.seerr = {
     enable = true;
-    openFirewall = false;
   };
 
   services.sonarr = {
+    enable = true;
+    openFirewall = false;
+    user = "cameron";
+    group = "users";
+  };
+
+  services.radarr = {
+    enable = true;
+    openFirewall = false;
+    user = "cameron";
+    group = "users";
+  };
+
+  services.lidarr = {
+    enable = true;
+    openFirewall = false;
+    user = "cameron";
+    group = "users";
+  };
+
+  services.readarr = {
+    enable = true;
+    openFirewall = false;
+    user = "cameron";
+    group = "users";
+  };
+
+  services.bazarr = {
     enable = true;
     openFirewall = false;
     user = "cameron";
@@ -300,11 +332,11 @@
     enable = true;
   };
 
-  services.immich = {
-    enable = true;
-    openFirewall = true;
-    database.enable = true;
-  };
+  #services.immich = {
+  #  enable = true;
+  #  openFirewall = true;
+  #  database.enable = true;
+  #};
 
   environment.etc."paperless-admin-pass".text = "admin";
   services.paperless = {
@@ -477,22 +509,22 @@
   #  description = "Nixos hosted factorio server";
   #};
 
-  services.gitlab = {
-    enable = true;
-    #port = 443;
-    #https = true;
-    databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
-    initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
-    secrets = {
-      secretFile = pkgs.writeText "secret" "Aig5zaic";
-      otpFile = pkgs.writeText "otpsecret" "Riew9mue";
-      dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
-      jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
-      activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-      activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-      activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
-    };
-  };
+  #services.gitlab = {
+  #  enable = true;
+  #  #port = 443;
+  #  #https = true;
+  #  databasePasswordFile = pkgs.writeText "dbPassword" "zgvcyfwsxzcwr85l";
+  #  initialRootPasswordFile = pkgs.writeText "rootPassword" "Jdnedejdnede6363!";
+  #  secrets = {
+  #    secretFile = pkgs.writeText "secret" "Aig5zaic";
+  #    otpFile = pkgs.writeText "otpsecret" "Riew9mue";
+  #    dbFile = pkgs.writeText "dbsecret" "we2quaeZ";
+  #    jwsFile = pkgs.runCommand "oidcKeyBase" {} "${pkgs.openssl}/bin/openssl genrsa 2048 > $out";
+  #    activeRecordPrimaryKeyFile = pkgs.writeText "activeRecordPrimaryKey" (builtins.readFile (pkgs.runCommand "activeRecordPrimaryKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #    activeRecordDeterministicKeyFile = pkgs.writeText "activeRecordDeterministicKey" (builtins.readFile (pkgs.runCommand "activeRecordDeterministicKey" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #    activeRecordSaltFile = pkgs.writeText "activeRecordSalt" (builtins.readFile (pkgs.runCommand "activeRecordSalt" {} "head -c32 /dev/urandom | base64 | head -c32 > $out"));
+  #  };
+  #};
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";
 
@@ -565,7 +597,7 @@
           reverse_proxy localhost:8096
         '';
       };
-      "jellyseer.mynixoshome.io" = {
+      "jellyseerr.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -585,6 +617,50 @@
             }
           }
           reverse_proxy localhost:8989
+        '';
+      };
+      "radarr.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:7878
+        '';
+      };
+      "lidarr.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8686
+        '';
+      };
+      "readarr.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:8787
+        '';
+      };
+      "bazarr.mynixoshome.io" = {
+        extraConfig = ''
+          tls internal {
+            client_auth {
+              mode require_and_verify
+              trust_pool file /etc/client_ca.pem
+            }
+          }
+          reverse_proxy localhost:6767
         '';
       };
       "prowlarr.mynixoshome.io" = {
@@ -864,15 +940,39 @@
             };
           }
           {
-            "Jellyseer" = {
+            "Jellyseerr" = {
               description = "Open-source media request and discovery manager for Jellyfin";
-              href = "https://jellyseer.mynixoshome.io";
+              href = "https://jellyseerr.mynixoshome.io";
             };
           }
           {
             "Sonarr" = {
               description = "Smart PVR (Personal Video Recorder) for bit users";
               href = "https://sonarr.mynixoshome.io";
+            };
+          }
+          {
+            "Radarr" = {
+              description = "Movie collection manager for Usenet and BitTorrent users";
+              href = "https://radarr.mynixoshome.io";
+            };
+          }
+          {
+            "Lidarr" = {
+              description = "Music collection manager for BitTorrent users";
+              href = "https://lidarr.mynixoshome.io";
+            };
+          }
+          {
+            "Readarr" = {
+              description = "Book and audiobook collection manager";
+              href = "https://readarr.mynixoshome.io";
+            };
+          }
+          {
+            "Bazarr" = {
+              description = "Automatic subtitle downloader for Sonarr and Radarr";
+              href = "https://bazarr.mynixoshome.io";
             };
           }
           {
@@ -911,12 +1011,12 @@
               href = "https://silverbullet.mynixoshome.io";
             };
           }
-          {
-            "Immich" = {
-              description = "High performance self-hosted photo and video management solution";
-              href = "https://immich.mynixoshome.io";
-            };
-          }
+          #{
+          #  "Immich" = {
+          #    description = "High performance self-hosted photo and video management solution";
+          #    href = "https://immich.mynixoshome.io";
+          #  };
+          #}
         ];
       }
       {
@@ -973,12 +1073,12 @@
       }
       {
         "CICD Automation" = [
-          {
-            "GitLab" = {
-              description = "Self hosted GitLab server; code repository and cicd experiments";
-              href = "https://gitlab.mynixoshome.io";
-            };
-          }
+          #{
+          #  "GitLab" = {
+          #    description = "Self hosted GitLab server; code repository and cicd experiments";
+          #    href = "https://gitlab.mynixoshome.io";
+          #  };
+          #}
           {
             "Github" = {
               description = "Link to personal github repo";
@@ -1073,8 +1173,8 @@
   };
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {

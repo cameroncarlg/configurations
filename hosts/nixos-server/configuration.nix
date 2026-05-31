@@ -256,11 +256,6 @@
     useRoutingFeatures = "server";
   };
 
-  #services.jellyseerr = {
-  #  enable = true;
-  #  openFirewall = false;
-  #};
-
   services.seerr = {
     enable = true;
   };
@@ -597,7 +592,7 @@
           reverse_proxy localhost:8096
         '';
       };
-      "jellyseerr.mynixoshome.io" = {
+      "Seerr.mynixoshome.io" = {
         extraConfig = ''
           tls internal {
             client_auth {
@@ -932,34 +927,34 @@
   ];
     services = [
       {
-        "Media" = [
+        "*Arr Stack" = [
           {
-            "Jellyfinn" = {
+            "Jellyfin" = {
               description = "Free Software Media System - Server Backend & API";
               href = "https://jellyfin.mynixoshome.io";
             };
           }
           {
-            "Jellyseerr" = {
+            "Seerr" = {
               description = "Open-source media request and discovery manager for Jellyfin";
               href = "https://jellyseerr.mynixoshome.io";
             };
           }
           {
             "Sonarr" = {
-              description = "Smart PVR (Personal Video Recorder) for bit users";
+              description = "Smart PVR for TV shows";
               href = "https://sonarr.mynixoshome.io";
             };
           }
           {
             "Radarr" = {
-              description = "Movie collection manager for Usenet and BitTorrent users";
+              description = "Movie collection manager";
               href = "https://radarr.mynixoshome.io";
             };
           }
           {
             "Lidarr" = {
-              description = "Music collection manager for BitTorrent users";
+              description = "Music collection manager";
               href = "https://lidarr.mynixoshome.io";
             };
           }
@@ -970,17 +965,21 @@
             };
           }
           {
-            "Bazarr" = {
-              description = "Automatic subtitle downloader for Sonarr and Radarr";
-              href = "https://bazarr.mynixoshome.io";
-            };
-          }
-          {
             "Prowlarr" = {
               description = "Index Manager/Proxy built to integrate with PVR apps";
               href = "https://prowlarr.mynixoshome.io";
             };
           }
+          {
+            "Bazarr" = {
+              description = "Automatic subtitle downloader for Sonarr and Radarr";
+              href = "https://bazarr.mynixoshome.io";
+            };
+          }
+        ];
+      }
+      {
+        "Media" = [
           {
             "Pinchflat" = {
               description = "Your next YouTube media manager";
@@ -1007,7 +1006,7 @@
           }
           {
             "Silverbullet" = {
-              description = "An open source personal productivity platform built on Markdown, turbo charged with the scripting power of Lua";
+              description = "An open source personal productivity platform built on Markdown";
               href = "https://silverbullet.mynixoshome.io";
             };
           }
